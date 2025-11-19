@@ -1,0 +1,17 @@
+
+<section class="hero">
+  <h2>„Daj rzeczom drugie życie – razem ograniczamy marnowanie!”</h2>
+  <p>Wymieniaj, oddawaj, odbieraj i twórz ekologiczne nawyki.</p>
+</section>
+
+
+<section class="preview-list">
+  <h3>Ostatnio dodane przedmioty</h3>
+
+  <!-- używamy komponentu od koleżanki -->
+  <div class="preview-grid">
+    <app-list-item *ngFor="let it of items" [item]="it"></app-list-item>
+  </div>
+
+  <a routerLink="/lista" class="see-all">Zobacz całą listę →</a>
+</section>
