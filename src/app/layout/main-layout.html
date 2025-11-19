@@ -1,0 +1,35 @@
+<mat-sidenav-container class="layout-container">
+
+  <mat-sidenav
+    #drawer
+    [(opened)]="sidenavOpened"
+    mode="over"
+    class="side-panel">
+
+    <h3>Menu</h3>
+    <button mat-button routerLink="/">Strona główna</button>
+    <button mat-button routerLink="/lista">Lista</button>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+
+    <mat-toolbar color="primary" class="toolbar">
+      <button mat-icon-button (click)="toggleSidenav()">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <span class="title">ZERO-WASTE</span>
+
+      <span class="space"></span>
+
+      <button mat-button>Logowanie</button>
+      <button mat-button>Rejestracja</button>
+    </mat-toolbar>
+
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

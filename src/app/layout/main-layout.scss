@@ -1,0 +1,25 @@
+.layout-container {
+  height: 100vh;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+}
+
+.title {
+  margin-left: 12px;
+  font-weight: 600;
+}
+
+.space {
+  flex: 1;
+}
+
+.side-panel {
+  width: 240px;
+}
+
+.content {
+  padding: 16px;
+}

@@ -1,0 +1,72 @@
+:host {
+  display: block;
+  font-family: Arial, sans-serif;
+  color: #2e3d2c; // ekologiczny, ciemna zieleń
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #e8f3e5; // jasna zieleń ekologiczna
+  border-bottom: 1px solid #c9e2c4;
+}
+
+.menu-btn {
+  font-size: 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+  color: #1e6033;
+}
+
+.auth-buttons button {
+  margin-left: 8px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #1e6033;
+  background: white;
+  cursor: pointer;
+}
+
+.auth-buttons .register {
+  background: #1e6033;
+  color: white;
+}
+
+.hero {
+  text-align: center;
+  padding: 40px 16px;
+  background: #f4f9f3;
+}
+
+.hero h2 {
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.preview-list {
+  padding: 20px;
+}
+
+.preview-grid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.see-all {
+  display: inline-block;
+  margin-top: 16px;
+  color: #1e6033;
+  font-weight: bold;
+  cursor: pointer;
+}
