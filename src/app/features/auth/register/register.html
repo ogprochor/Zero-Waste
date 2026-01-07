@@ -1,0 +1,76 @@
+<div class="register-container">
+  <div class="left-panel">
+    <div class="overlay"></div>
+    <div class="left-content">
+      <div class="brand">
+        <div class="brand__logo">Zero Waste</div>
+      </div>
+      <p class="subtitle">Dołącz do społeczności, która daje drugie życie rzeczom!</p>
+
+      <ul class="benefits">
+        <li>Ratuj jedzenie i redukuj odpady</li>
+        <li>Wspieraj lokalne organizacje</li>
+        <li>Zbieraj punkty i nagrody</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <a routerLink="/" class="back-link">← Powrót do strony głównej</a>
+
+    <h2>Utwórz konto</h2>
+    <p class="subtitle">Dołącz do nas i zacznij działać ekologicznie</p>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+      <mat-form-field appearance="outline" class="full mat-field">
+        <mat-label>Imię i nazwisko</mat-label>
+        <input matInput formControlName="name">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full mat-field">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full mat-field">
+        <mat-label>Numer telefonu (opcjonalnie)</mat-label>
+        <input matInput formControlName="phone">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full mat-field">
+        <mat-label>Hasło</mat-label>
+        <input matInput type="password" formControlName="password">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full mat-field">
+        <mat-label>Powtórz hasło</mat-label>
+        <input matInput type="password" formControlName="confirmPassword">
+      </mat-form-field>
+
+
+      <div class="checkboxes">
+        <mat-checkbox formControlName="rules">
+          Akceptuję regulamin i politykę prywatności
+        </mat-checkbox>
+
+        <mat-checkbox formControlName="newsletter">
+          Chcę otrzymywać newsletter z poradami i wyzwaniami zero waste
+        </mat-checkbox>
+      </div>
+
+      <button mat-raised-button color="primary" class="full main-btn">Utwórz konto</button>
+
+      <div class="divider">lub</div>
+
+      <button mat-stroked-button class="full social-btn">Google</button>
+      <button mat-stroked-button class="full social-btn">Facebook</button>
+
+      <p class="bottom-text">
+        Masz już konto?
+        <a routerLink="/login">Zaloguj się</a>
+      </p>
+
+    </form>
+  </div>
+</div>

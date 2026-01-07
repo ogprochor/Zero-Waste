@@ -1,0 +1,30 @@
+.offer-details {
+  padding: 2rem;
+
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1rem;
+  }
+}
+.back-btn {
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: none;
+  background: #e6fffa;
+  color: #2c7a7b;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    background: #b2f5ea;
+    transform: translateX(-3px);
+  }
+}

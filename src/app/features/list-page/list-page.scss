@@ -1,0 +1,227 @@
+.offers-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px; // trochę większa przerwa dla przejrzystości makiety
+}
+
+/* HEADER */
+
+.offers-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.offers-title {
+  margin: 0 0 6px;
+  font-size: clamp(1.6rem, 2.2vw, 1.9rem);
+  font-weight: 700;
+  color: var(--zw-text-main);
+}
+
+.offers-subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--zw-text-muted);
+}
+
+.offers-link {
+  font-size: 0.9rem;
+  color: var(--zw-primary);
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* FILTRY */
+
+.offers-filters {
+  background: #ffffff;
+  border-radius: var(--zw-radius-card);
+  padding: 20px 24px; // jak w makiecie
+  border: 1px solid var(--zw-border-soft);
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 24px;
+
+  align-items: center;
+  justify-content: space-between;
+}
+
+.offers-filters__group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 20px;
+}
+
+.offers-filters__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.8rem;
+  min-width: 160px;
+
+  span {
+    color: var(--zw-text-muted);
+    font-weight: 500;
+  }
+
+  input,
+  select {
+    border-radius: var(--zw-radius-pill);
+    border: 1px solid var(--zw-border-soft);
+    padding: 8px 14px;
+    font: inherit;
+    outline: none;
+    background: #f9fafb;
+    transition: 0.15s ease;
+
+    &:focus {
+      border-color: var(--zw-primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 2px rgba(0, 163, 74, 0.18);
+    }
+  }
+}
+
+.offers-filters__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.chip {
+  border-radius: var(--zw-radius-pill);
+  border: 1px solid var(--zw-border-soft);
+  background: #f9fafb;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: 0.15s ease;
+
+  &:hover {
+    background: #ffffff;
+  }
+
+  &--active {
+    background: var(--zw-primary-soft);
+    border-color: var(--zw-primary);
+    color: var(--zw-primary-dark);
+    font-weight: 500;
+  }
+}
+
+/* RESPONSYWNOŚĆ */
+
+@media (max-width: 768px) {
+  .offers-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .offers-filters {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 16px;
+  }
+
+  .offers-filters__chips {
+    margin-left: 0;
+  }
+
+  .offers-title {
+    font-size: 1.6rem;
+  }
+}
+
+/* GRID KART */
+
+.offers-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px; // zgodnie z makietą
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+/* TOOLBAR NAD LISTĄ (licznik + sortowanie) */
+
+.offers-toolbar {
+  margin-top: 4px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: var(--zw-text-muted);
+}
+
+.offers-count {
+  font-weight: 500;
+}
+
+.offers-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  select {
+    border-radius: var(--zw-radius-pill);
+    border: 1px solid var(--zw-border-soft);
+    padding: 6px 12px;
+    font: inherit;
+    outline: none;
+    background: #f9fafb;
+    cursor: pointer;
+
+    &:focus {
+      border-color: var(--zw-primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 2px rgba(0, 163, 74, 0.18);
+    }
+  }
+}
+
+.offers-empty {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  color: var(--zw-text-muted);
+}
+
+@media (max-width: 768px) {
+  .offers-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+.offers-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 720px) {
+  .offers-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-add-offer {
+    text-align: center;
+  }
+}

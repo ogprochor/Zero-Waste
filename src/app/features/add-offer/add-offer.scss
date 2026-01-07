@@ -1,0 +1,152 @@
+.add-offer {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.add-offer__header {
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+
+  h2 {
+    margin: 0 0 4px 0;
+  }
+
+  p {
+    margin: 0;
+    opacity: 0.8;
+  }
+}
+
+.add-offer__back {
+  text-decoration: none;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.add-offer__card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+}
+
+.grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  span {
+    font-weight: 600;
+  }
+
+  input,
+  select,
+  textarea {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 12px;
+    padding: 10px 12px;
+    outline: none;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+}
+
+.field--full {
+  grid-column: 1 / -1;
+}
+
+.err {
+  color: #b00020;
+}
+
+.hint {
+  opacity: 0.75;
+}
+
+.previews {
+  margin-top: 10px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+
+.preview {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 14px;
+  padding: 10px;
+  background: #fafafa;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+  }
+
+  .remove {
+    border: 0;
+    border-radius: 10px;
+    padding: 8px 10px;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.08);
+  }
+}
+
+.msg {
+  margin: 12px 0 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+
+.msg--error {
+  background: rgba(176, 0, 32, 0.08);
+}
+
+.msg--success {
+  background: rgba(0, 120, 0, 0.10);
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.btn {
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  background: #111;
+  color: #fff;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: #111;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (max-width: 720px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
