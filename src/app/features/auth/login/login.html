@@ -21,6 +21,7 @@
     <h2>Zaloguj się</h2>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+      
       <mat-form-field appearance="outline" class="full mat-field">
         <mat-label>Adres email</mat-label>
         <input matInput formControlName="email" autocomplete="email" />
