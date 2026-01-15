@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ListItem } from '../../models/list-item';
 import { ListItemComponent } from '../../shared/list-item/list-item';
-import { ItemService } from '../../services/item.service';
+import { OfferService } from '../../services/offer.service'; 
 
 @Component({
   selector: 'app-home',
@@ -13,23 +12,30 @@ import { ItemService } from '../../services/item.service';
   styleUrl: './home.scss',
 })
 export class Home implements OnInit {
-  items: ListItem[] = [];
+  items: any[] = []; 
   loading = true;
   error: string | null = null;
 
-  constructor(private itemService: ItemService) {}
+  constructor(private offerService: OfferService) {}
 
   ngOnInit(): void {
-    this.itemService.getItems().subscribe({
+    this.offerService.getOffers().subscribe({
       next: (data) => {
-        // na stronie głównej pokazujemy np. 6 ostatnich
-        this.items = (data ?? []).slice(0, 6);
+        
+        console.log('Dane z backendu:', data);
+
+        this.items = (data ?? []).map(offer => ({
+          ...offer, 
+          name: offer.title,          
+          imageUrl: offer.image_url,  
+          description: ''          
+        })).slice(0, 20);
+
         this.loading = false;
       },
       error: (err) => {
-        this.error = 'Nie udało się pobrać ofert z backendu.';
+        this.error = 'Nie udało się pobrać ofert.';
         this.loading = false;
-        console.error(err);
       },
     });
   }

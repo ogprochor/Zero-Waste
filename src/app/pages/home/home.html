@@ -29,7 +29,11 @@
   <h3>Ostatnio dodane przedmioty</h3>
 
   <div class="preview-grid">
-    <app-list-item *ngFor="let it of items" [item]="it"></app-list-item>
+    <a *ngFor="let it of items" 
+       [routerLink]="['/offers', it.id]" 
+       class="offer-tile-link">
+      <app-list-item [item]="it"></app-list-item>
+    </a>
   </div>
 
   <a routerLink="/lista" class="see-all">Zobacz całą listę →</a>
