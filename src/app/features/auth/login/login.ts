@@ -6,7 +6,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '../../../services/auth.service'; // ścieżka do Twojego auth.service.ts
+import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 
@@ -30,7 +31,7 @@ export class LoginComponent {
 
   loginForm;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
@@ -59,9 +60,9 @@ export class LoginComponent {
       )
       .subscribe(res => {
         console.log('Logowanie udane', res);
+        this.authService.setCurrentUser(res);
         alert('Zalogowano pomyślnie!');
-        // możesz tu np. zapisać token w localStorage:
-        // localStorage.setItem('token', res.access_token);
+        this.router.navigate(['/lista']);
       });
   }
 }

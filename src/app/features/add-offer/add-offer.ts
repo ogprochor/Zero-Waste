@@ -106,6 +106,7 @@ export class AddOfferComponent implements OnInit, OnDestroy {
         description: v.description?.trim() || null,
         location: v.location?.trim() || null,
         category_id: Number(v.category_id),
+        price: v.price != null && v.price !== '' ? Number(v.price) : null,
         image_url: null,
       };
 
