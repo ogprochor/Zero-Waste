@@ -1,0 +1,80 @@
+<section class="add-offer">
+  <header class="add-offer__header">
+    <div>
+      <h2>Dodaj ofertę</h2>
+      <p>Wypełnij formularz. Widok responsywny i gotowy do integracji z backendem.</p>
+    </div>
+
+    <a class="add-offer__back" routerLink="/lista">← Wróć do listy</a>
+  </header>
+
+  <div class="add-offer__card">
+    <form (ngSubmit)="submit()" [formGroup]="form">
+      <div class="grid">
+        <label class="field">
+          <span>Tytuł *</span>
+          <input type="text" formControlName="title" placeholder="np. Książki do oddania" />
+          <small class="err" *ngIf="form.get('title')?.touched && form.get('title')?.invalid">
+            Tytuł jest wymagany (min. 3 znaki).
+          </small>
+        </label>
+
+        <label class="field">
+          <span>Kategoria *</span>
+          <select formControlName="category_id" [disabled]="loadingCategories">
+            <option [ngValue]="null">Wybierz kategorię...</option>
+            <option *ngFor="let c of categories" [ngValue]="c.id">
+              {{ c.name }}
+            </option>
+          </select>
+          <small class="err" *ngIf="form.get('category_id')?.touched && form.get('category_id')?.invalid">
+            Wybierz kategorię.
+          </small>
+        </label>
+
+        <label class="field field--full">
+          <span>Opis</span>
+          <textarea rows="5" formControlName="description" placeholder="Np. stan, odbiór, itp."></textarea>
+        </label>
+
+        <label class="field">
+          <span>Lokalizacja</span>
+          <input type="text" formControlName="location" placeholder="np. Warszawa" />
+        </label>
+
+        <label class="field">
+          <span>Cena (opcjonalnie)</span>
+          <input type="number" formControlName="price" placeholder="np. 20" />
+          <small class="hint"></small>
+        </label>
+
+        <div class="field field--full">
+          <span>Zdjęcia</span>
+          <input type="file" accept="image/*" multiple (change)="onFilesSelected($event)" />
+
+          <small class="hint">
+            Możesz dodać do 6 zdjęć. Podgląd działa od razu.
+            Na razie do backendu wysyłamy 1. zdjęcie jako <code>image_url</code>.
+          </small>
+
+          <div class="previews" *ngIf="previews.length > 0">
+            <div class="preview" *ngFor="let p of previews; let i = index">
+              <img [src]="p" alt="Podgląd zdjęcia" />
+              <button type="button" class="remove" (click)="removeImage(i)">Usuń</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="msg msg--error" *ngIf="error">{{ error }}</p>
+      <p class="msg msg--success" *ngIf="success">{{ success }}</p>
+
+      <div class="actions">
+        <button class="btn" type="submit" [disabled]="submitting">
+          {{ submitting ? 'Dodawanie...' : 'Dodaj ofertę' }}
+        </button>
+        <a class="btn btn--ghost" routerLink="/lista">Anuluj</a>
+      </div>
+    </form>
+  </div>
+</section>
