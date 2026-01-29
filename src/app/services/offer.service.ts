@@ -9,6 +9,8 @@ export interface Offer {
   description?: string;
   image_url?: string;
   location?: string;
+  price?: number;
+  owner_id: number;
 }
 
 @Injectable({
@@ -27,5 +29,9 @@ export class OfferService {
  
   getOfferById(id: number): Observable<Offer> {
     return this.http.get<Offer>(`${this.apiUrl}/${id}`);
+  }
+
+  deleteOffer(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

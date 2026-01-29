@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgIf, CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
-import { ItemService, OfferDto } from '../../services/item.service';
-import { AuthService } from '../../services/auth.service';
+import { OfferService, Offer } from '../../services/offer.service';
 
 @Component({
   selector: 'app-offer-details',
@@ -16,45 +15,42 @@ import { AuthService } from '../../services/auth.service';
         </div>
 
         <div class="content-wrapper">
+          <div class="owner-actions" *ngIf="isOwner">
+            <button class="btn-edit" (click)="onEdit()">
+              <span class="icon">✏️</span> Edytuj ofertę
+            </button>
+            <button class="btn-delete" (click)="confirmDelete()">
+              <span class="icon">🗑️</span> Usuń
+            </button>
+          </div>
+
           <span class="location-badge">📍 {{ offer.location }}</span>
           <h2>{{ offer.title }}</h2>
           <p class="description">{{ offer.description }}</p>
 
           <p *ngIf="offer.price != null" class="description">
-            <strong>Cena:</strong> {{ offer.price }}
+            <strong>Cena:</strong> {{ offer.price === 0 ? 'Za darmo' : offer.price + ' zł' }}
           </p>
-
+          
           <div class="actions">
             <button routerLink="/" class="btn-secondary">
               <span class="icon">←</span> Powrót do strony głównej
             </button>
-
-            <a *ngIf="isOwner" [routerLink]="['/offers', offer.id, 'edit']" class="btn-secondary" style="margin-left: 8px;">
-              ✏️ Edytuj
-            </a>
-
-            <button *ngIf="isOwner" (click)="openDeleteModal()" class="btn-secondary" style="margin-left: 8px; border-color:#e74c3c;">
-              🗑️ Usuń
-            </button>
           </div>
 
-          <p *ngIf="flashMsg" style="margin-top: 12px; padding: 10px 12px; border-radius: 12px; background: rgba(46, 204, 113, 0.12); border: 1px solid rgba(46, 204, 113, 0.25);">
-            {{ flashMsg }}
-          </p>
-
-          <p *ngIf="error" style="margin-top: 12px; color:#e74c3c;">{{ error }}</p>
+          <p *ngIf="flashMsg" class="flash-message">{{ flashMsg }}</p>
+          <p *ngIf="error" class="error-message">{{ error }}</p>
         </div>
       </div>
 
-      <!-- MODAL POTWIERDZENIA USUNIĘCIA -->
-      <div class="zw-modal-backdrop" *ngIf="showDeleteModal">
-        <div class="zw-modal">
-          <h3>Usunąć ofertę?</h3>
-          <p>Tej operacji nie da się cofnąć.</p>
-          <div class="zw-modal-actions">
-            <button class="btn-secondary" (click)="closeDeleteModal()" [disabled]="deleting">Anuluj</button>
-            <button class="btn-secondary" (click)="confirmDelete()" [disabled]="deleting" style="border-color:#e74c3c;">
-              {{ deleting ? 'Usuwanie...' : 'Usuń' }}
+      <div class="modal-overlay" *ngIf="showDeleteModal">
+        <div class="modal-card">
+          <h3>Potwierdź usunięcie</h3>
+          <p>Czy na pewno chcesz trwale usunąć ofertę: <strong>{{ offer.title }}</strong>?</p>
+          <div class="modal-buttons">
+            <button class="btn-cancel" (click)="showDeleteModal = false" [disabled]="deleting">Anuluj</button>
+            <button class="btn-confirm-delete" (click)="deleteOffer()" [disabled]="deleting">
+              {{ deleting ? 'Usuwanie...' : 'Tak, usuń' }}
             </button>
           </div>
         </div>
@@ -71,18 +67,18 @@ import { AuthService } from '../../services/auth.service';
 })
 export class OfferDetailsComponent implements OnInit {
   id: string | null;
-  offer: OfferDto | null = null;
-
-  deleting = false;
+  offer: Offer | null = null;
+  
+  isOwner = false; 
   showDeleteModal = false;
+  deleting = false;
   error: string | null = null;
   flashMsg: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
-    private itemService: ItemService,
-    private authService: AuthService,
-    private router: Router
+    private offerService: OfferService,
+    private router: Router 
   ) {
     this.id = this.route.snapshot.paramMap.get('id');
   }
@@ -91,45 +87,54 @@ export class OfferDetailsComponent implements OnInit {
     this.route.queryParams.subscribe((p) => {
       this.flashMsg = p['msg'] ?? null;
     });
+
     if (this.id) {
-      this.itemService.getOfferById(Number(this.id)).subscribe({
-        next: (data) => this.offer = data,
-        error: (err) => console.error('Błąd pobierania oferty:', err)
+      this.offerService.getOfferById(Number(this.id)).subscribe({
+        next: (data: Offer) => {
+          this.offer = data;
+          this.checkOwnership();
+        },
+        error: (err: any) => {
+          console.error('Błąd pobierania oferty:', err);
+          this.error = 'Nie udało się pobrać szczegółów oferty.';
+        }
       });
     }
   }
 
-  get isOwner(): boolean {
-    const me = this.authService.getCurrentUserId();
-    return !!this.offer && !!me && this.offer.owner_id === me;
-  }
-
-  openDeleteModal(): void {
-    this.error = null;
-    this.showDeleteModal = true;
-  }
-
-  closeDeleteModal(): void {
-    if (this.deleting) return;
-    this.showDeleteModal = false;
+  checkOwnership(): void {
+    const storedUser = localStorage.getItem('user');
+    if (this.offer && storedUser) {
+      const currentUser = JSON.parse(storedUser);
+      this.isOwner = Number(this.offer.owner_id) === Number(currentUser.id);
+    } else {
+      this.isOwner = false;
+    }
   }
 
   confirmDelete(): void {
-    if (!this.offer) return;
-    this.deleting = true;
-    this.error = null;
+    this.showDeleteModal = true;
+  }
 
-    this.itemService.deleteOffer(this.offer.id).subscribe({
-      next: () => {
-        this.router.navigate(['/lista'], {
-          queryParams: { msg: 'Oferta została usunięta.' },
-        });
-      },
-      error: (err) => {
-        console.error(err);
-        this.error = err?.error?.detail || 'Nie udało się usunąć oferty.';
-        this.deleting = false;
-      },
-    });
+  onEdit(): void {
+    this.router.navigate(['/edit-offer', this.id]);
+  }
+
+  deleteOffer(): void {
+    if (this.id && this.offer) {
+      this.deleting = true;
+      this.offerService.deleteOffer(Number(this.id)).subscribe({
+        next: () => {
+          this.showDeleteModal = false;
+          this.router.navigate(['/'], { queryParams: { msg: 'Oferta została usunięta.' } });
+        },
+        error: (err: any) => {
+          console.error('Błąd podczas usuwania oferty:', err);
+          this.error = 'Nie udało się usunąć oferty.';
+          this.deleting = false;
+          this.showDeleteModal = false;
+        }
+      });
+    }
   }
 }
