@@ -20,52 +20,64 @@
     <a routerLink="/" class="back-link">← Powrót do strony głównej</a>
 
     <h2>Utwórz konto</h2>
-    <p class="subtitle">Dołącz do nas i zacznij działać ekologicznie</p>
+    <p class="subtitle">TEST Dołącz do nas i zacznij działać ekologicznie</p>
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
 
       <mat-form-field appearance="outline" class="full mat-field">
-        <mat-label>Imię i nazwisko</mat-label>
-        <input matInput formControlName="name">
+        <mat-label>Nazwa użytkownika</mat-label>
+        <input matInput formControlName="username">
+        <mat-error *ngIf="hasError('username','required')">Nazwa użytkownika jest wymagana</mat-error>
+        <mat-error *ngIf="hasError('username','minlength')">Minimum 3 znaki</mat-error>
+        <mat-error *ngIf="hasError('username','maxlength')">Maksymalnie 30 znaków</mat-error>
+        <mat-error *ngIf="hasError('username','pattern')">Tylko litery, cyfry, _ . -</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full mat-field">
         <mat-label>Email</mat-label>
-        <input matInput formControlName="email">
+        <input matInput type="email" formControlName="email">
+        <mat-error *ngIf="hasError('email','required')">Email jest wymagany</mat-error>
+        <mat-error *ngIf="hasError('email','email')">Nieprawidłowy format email</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full mat-field">
-        <mat-label>Numer telefonu (opcjonalnie)</mat-label>
+        <mat-label>Numer telefonu</mat-label>
         <input matInput formControlName="phone">
+        <mat-error *ngIf="hasError('phone','pattern')">Numer musi mieć dokładnie 9 cyfr</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full mat-field">
         <mat-label>Hasło</mat-label>
         <input matInput type="password" formControlName="password">
+        <mat-error *ngIf="hasError('password','required')">Hasło jest wymagane; Hasło musi zawierać wielką literę i znak specjalny</mat-error>
+        <mat-error *ngIf="hasError('password','minlength')">Minimum 8 znaków</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="full mat-field">
         <mat-label>Powtórz hasło</mat-label>
         <input matInput type="password" formControlName="confirmPassword">
+        <mat-error *ngIf="passwordMismatch">Hasła muszą być identyczne</mat-error>
       </mat-form-field>
 
-
       <div class="checkboxes">
-        <mat-checkbox formControlName="rules">
+        <mat-checkbox
+          formControlName="rules"
+          [class.checkbox-error]="hasError('rules','required')">
           Akceptuję regulamin i politykę prywatności
         </mat-checkbox>
+
 
         <mat-checkbox formControlName="newsletter">
           Chcę otrzymywać newsletter z poradami i wyzwaniami zero waste
         </mat-checkbox>
       </div>
 
-      <button mat-raised-button color="primary" class="full main-btn">Utwórz konto</button>
+      <button mat-raised-button color="primary" class="full main-btn" type="submit">Utwórz konto</button>
 
       <div class="divider">lub</div>
 
-      <button mat-stroked-button class="full social-btn">Google</button>
-      <button mat-stroked-button class="full social-btn">Facebook</button>
+      <button mat-stroked-button class="full social-btn" type="button">Google</button>
+      <button mat-stroked-button class="full social-btn" type="button">Facebook</button>
 
       <p class="bottom-text">
         Masz już konto?

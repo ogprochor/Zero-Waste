@@ -104,7 +104,50 @@ h2 { font-size: 28px; margin-bottom: 6px; }
   opacity: 0;
 }
 
+.mat-mdc-form-field.mat-form-field-invalid .mat-mdc-text-field-wrapper {
+  .mat-mdc-notch-piece {
+    border-color: #f44336 !important;
+  }
+}
 
+.mat-mdc-form-field.mat-form-field-invalid {
+  .mat-mdc-floating-label {
+    color: #f44336 !important;
+  }
+}
+
+// Czerwone obramowanie gdy pole jest invalid i ma wartość
+.mat-mdc-form-field {
+  &.ng-invalid.ng-dirty,
+  &.ng-invalid.ng-touched {
+    .mat-mdc-text-field-wrapper {
+      .mat-mdc-notch-piece {
+        border-color: #f44336 !important;
+      }
+    }
+    
+    .mdc-floating-label {
+      color: #f44336 !important;
+    }
+  }
+}
+
+// Usunięcie zielonego koloru dla valid pól (opcjonalnie)
+.mat-mdc-form-field.ng-valid.ng-touched {
+  .mat-mdc-text-field-wrapper {
+    .mat-mdc-notch-piece {
+      border-color: rgba(0, 0, 0, 0.38);
+    }
+  }
+}
+
+.checkbox-error {
+  color: #f44336;
+
+  .mdc-label {
+    color: #f44336 !important;
+  }
+}
 
 .checkboxes { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
 

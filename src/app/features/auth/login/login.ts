@@ -58,11 +58,9 @@ export class LoginComponent {
           return throwError(() => err);
         })
       )
-      .subscribe(res => {
-        console.log('Logowanie udane', res);
-        this.authService.setCurrentUser(res);
+      .subscribe(() => {
         alert('Zalogowano pomyślnie!');
-        this.router.navigate(['/lista']);
+        window.location.href = '/'; 
       });
   }
 }
