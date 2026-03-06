@@ -1,0 +1,5 @@
+[
+  { "id": "1", "name": "Książka", "description": "Opis książki", "imageUrl": "assets/images/zdj1.jpg" },
+  { "id": "2", "name": "Kubek", "description": "Ceramiczny kubek", "imageUrl": "assets/images/zdj2.jpg" },
+  { "id": "3", "name": "Długopis", "description": "Niebieski tusz", "imageUrl": "assets/images/zdj3.jpg" }
+]

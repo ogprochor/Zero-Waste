@@ -1,0 +1,161 @@
+<section class="add-offer">
+  <header class="add-offer__header">
+    <div>
+      <h2>Dodaj nową ofertę</h2>
+      <p>Wypełnij dane, aby Twój przedmiot trafił do społeczności Zero Waste.</p>
+    </div>
+    <a class="add-offer__back" routerLink="/lista">← Wróć do listy</a>
+  </header>
+
+  <div class="add-offer__card">
+    <form (ngSubmit)="submit()" [formGroup]="form">
+
+      <div class="grid">
+        <div class="field">
+          <label for="title">
+            <span>Tytuł ogłoszenia *</span>
+          </label>
+          <input
+            type="text"
+            id="title"
+            formControlName="title"
+            placeholder="np. Książki do oddania w dobre ręce"
+          />
+          <small
+            class="err"
+            *ngIf="form.get('title')?.touched && form.get('title')?.invalid"
+          >
+            Tytuł musi mieć co najmniej 3 znaki.
+          </small>
+        </div>
+
+        <div class="field">
+          <label for="category">
+            <span>Kategoria *</span>
+          </label>
+
+          <select
+            id="category"
+            formControlName="category_id"
+            [disabled]="loadingCategories"
+          >
+            <option [ngValue]="null">
+              {{ loadingCategories ? 'Ładowanie kategorii...' : 'Wybierz kategorię z listy...' }}
+            </option>
+
+            <option *ngFor="let c of categories" [ngValue]="c.id">
+              {{ c.name }}
+            </option>
+          </select>
+
+          <small
+            class="err"
+            *ngIf="form.get('category_id')?.touched && form.get('category_id')?.invalid"
+          >
+            Wybór kategorii jest wymagany.
+          </small>
+
+          <small
+            class="err"
+            *ngIf="!loadingCategories && categories.length === 0"
+          >
+            Nie znaleziono kategorii do wyświetlenia.
+          </small>
+        </div>
+
+        <div class="field field--full">
+          <label for="description">
+            <span>Opis przedmiotu</span>
+          </label>
+          <textarea
+            id="description"
+            rows="5"
+            formControlName="description"
+            placeholder="Opisz stan przedmiotu, sposób odbioru lub inne ważne szczegóły..."
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label for="location">
+            <span>Lokalizacja</span>
+          </label>
+          <input
+            type="text"
+            id="location"
+            formControlName="location"
+            placeholder="np. Warszawa, Mokotów"
+          />
+        </div>
+
+        <div class="field">
+          <label for="price">
+            <span>Cena (opcjonalnie)</span>
+          </label>
+          <input
+            type="number"
+            id="price"
+            formControlName="price"
+            placeholder="Wpisz 0, jeśli oddajesz za darmo"
+          />
+        </div>
+
+        <div class="field field--full">
+          <label>
+            <span>Zdjęcie przedmiotu</span>
+          </label>
+
+          <input
+            type="file"
+            accept="image/*"
+            (change)="onFilesSelected($event)"
+            id="file-upload"
+            class="file-input"
+          />
+
+          <small class="hint">
+            Możesz dodać jedno zdjęcie oferty.
+          </small>
+
+          <div class="previews" *ngIf="previews.length > 0">
+            <div class="preview" *ngFor="let p of previews; let i = index">
+              <img [src]="p" alt="Podgląd zdjęcia" />
+              <button
+                type="button"
+                class="remove"
+                (click)="removeImage(i)"
+              >
+                Usuń
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="msg msg--error" *ngIf="error">
+        {{ error }}
+      </p>
+
+      <p class="msg msg--success" *ngIf="success">
+        {{ success }}
+      </p>
+
+      <div class="actions">
+        <button
+          class="btn"
+          type="submit"
+          [disabled]="submitting || form.invalid"
+        >
+          {{ submitting ? 'Trwa dodawanie...' : 'Opublikuj ofertę' }}
+        </button>
+
+        <a
+          class="btn btn--ghost"
+          routerLink="/lista"
+        >
+          Anuluj i wróć
+        </a>
+      </div>
+
+    </form>
+  </div>
+</section>

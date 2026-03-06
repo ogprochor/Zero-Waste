@@ -1,0 +1,166 @@
+/* src/app/features/auth/register/register.scss */
+
+.register-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* LEFT */
+.left-panel {
+  width: 50%;
+  position: relative;
+  background-image: url('/assets/images/zdjbg.jpg');
+  background-size: cover;
+  background-position: center;
+  display: block;
+  overflow: hidden;
+}
+
+.left-panel .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 128, 0, 0.60);
+  backdrop-filter: blur(2px);
+}
+
+.left-content {
+  position: absolute;
+  top: 50%;
+  left: 60px;
+  transform: translateY(-50%);
+  color: #fff;
+  max-width: 380px;
+}
+
+.brand__logo {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.subtitle {
+  margin-bottom: 22px;
+  font-size: 16px;
+  line-height: 1.4;
+  opacity: 0.95;
+}
+
+.benefits {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: rgba(255,255,255,0.95);
+  li { margin: 8px 0; font-size: 14px; }
+
+}
+
+/* RIGHT */
+.right-panel {
+  width: 50%;
+  padding: 48px 96px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #fff;
+}
+
+.back-link {
+  color: var(--zw-primary);
+  margin-bottom: 12px;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+h2 { font-size: 28px; margin-bottom: 6px; }
+.subtitle { color: #6b7280; margin-bottom: 18px; }
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.full { width: 100%; }
+
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+.mat-mdc-text-field-wrapper {
+  border-radius: 10px !important;
+  background-color: #fff !important;
+}
+
+.mat-mdc-form-field-outline {
+  border-radius: 10px;
+}
+
+.mat-mdc-form-field:not(.mat-form-field-disabled)
+  .mat-mdc-text-field-wrapper {
+  background-color: #fff;
+}
+
+.mat-mdc-form-field-focus-overlay {
+  opacity: 0;
+}
+
+.mat-mdc-form-field.mat-form-field-invalid .mat-mdc-text-field-wrapper {
+  .mat-mdc-notch-piece {
+    border-color: #f44336 !important;
+  }
+}
+
+.mat-mdc-form-field.mat-form-field-invalid {
+  .mat-mdc-floating-label {
+    color: #f44336 !important;
+  }
+}
+
+// Czerwone obramowanie gdy pole jest invalid i ma wartość
+.mat-mdc-form-field {
+  &.ng-invalid.ng-dirty,
+  &.ng-invalid.ng-touched {
+    .mat-mdc-text-field-wrapper {
+      .mat-mdc-notch-piece {
+        border-color: #f44336 !important;
+      }
+    }
+    
+    .mdc-floating-label {
+      color: #f44336 !important;
+    }
+  }
+}
+
+// Usunięcie zielonego koloru dla valid pól (opcjonalnie)
+.mat-mdc-form-field.ng-valid.ng-touched {
+  .mat-mdc-text-field-wrapper {
+    .mat-mdc-notch-piece {
+      border-color: rgba(0, 0, 0, 0.38);
+    }
+  }
+}
+
+.checkbox-error {
+  color: #f44336;
+
+  .mdc-label {
+    color: #f44336 !important;
+  }
+}
+
+.checkboxes { display: flex; flex-direction: column; gap: 6px; margin-top: 6px; }
+
+.main-btn { height: 44px; border-radius: 10px; background: var(--zw-primary); color: #fff; }
+
+.divider { text-align: center; margin: 18px 0; color: #9ca3af; }
+
+.social-btn { height: 44px; }
+
+.bottom-text { text-align: center; margin-top: 18px; a { color: var(--zw-primary); } }
+
+@media (max-width: 900px) {
+  .register-container { flex-direction: column; }
+  .left-panel { width: 100%; height: 220px; }
+  .right-panel { width: 100%; padding: 28px; }
+}
