@@ -1,6 +1,5 @@
 <div class="offers-header">
   <h2>Oferty</h2>
-
   <a *ngIf="isLoggedIn()" routerLink="/dodaj-oferte" class="btn-add-offer">
     ➕ Dodaj ofertę
   </a>
@@ -10,24 +9,16 @@
   <header class="offers-header">
     <div>
       <h2 class="offers-title">Wszystkie oferty</h2>
-      <p class="offers-subtitle">
-        Najnowsze ogłoszenia od naszej społeczności
-      </p>
+      <p class="offers-subtitle">Najnowsze ogłoszenia od naszej społeczności</p>
     </div>
-    <a class="offers-link" (click)="resetFilters()">
-      Zobacz wszystkie
-    </a>
+    <a class="offers-link" (click)="resetFilters()">Zobacz wszystkie</a>
   </header>
 
   <section class="offers-filters">
     <div class="offers-filters__group">
       <label class="offers-filters__field">
         <span>Szukaj</span>
-        <input
-          type="search"
-          placeholder="np. krzesło, książki, zabawki..."
-          [(ngModel)]="searchTerm"
-        />
+        <input type="search" placeholder="np. krzesło..." [(ngModel)]="searchTerm" />
       </label>
 
       <label class="offers-filters__field">
@@ -40,47 +31,19 @@
 
       <label class="offers-filters__field">
         <span>Miasto</span>
-        <input
-          type="text"
-          placeholder="np. Warszawa"
-          [(ngModel)]="selectedCity"
-        />
+        <input type="text" placeholder="np. Warszawa" [(ngModel)]="selectedCity" />
       </label>
     </div>
 
     <div class="offers-filters__chips">
-      <button
-        type="button"
-        class="chip"
-        [class.chip--active]="selectedType === 'free'"
-        (click)="setType('free')"
-      >
-        Za darmo
-      </button>
-      <button
-        type="button"
-        class="chip"
-        [class.chip--active]="selectedType === 'exchange'"
-        (click)="setType('exchange')"
-      >
-        Wymiana
-      </button>
-      <button
-        type="button"
-        class="chip"
-        [class.chip--active]="selectedType === 'sell'"
-        (click)="setType('sell')"
-      >
-        Sprzedam
-      </button>
+      <button type="button" class="chip" [class.chip--active]="selectedType === 'free'" (click)="setType('free')">Za darmo</button>
+      <button type="button" class="chip" [class.chip--active]="selectedType === 'exchange'" (click)="setType('exchange')">Wymiana</button>
+      <button type="button" class="chip" [class.chip--active]="selectedType === 'sell'" (click)="setType('sell')">Sprzedam</button>
     </div>
   </section>
 
   <section class="offers-toolbar">
-    <span class="offers-count">
-      {{ filteredItems.length }} ofert
-    </span>
-
+    <span class="offers-count">{{ filteredItems.length }} ofert</span>
     <label class="offers-sort">
       <span>Sortuj:</span>
       <select [(ngModel)]="sortOption">
@@ -92,17 +55,8 @@
   </section>
 
   <section class="offers-grid">
-    <app-list-item
-      *ngFor="let item of filteredItems"
-      [item]="item"
-      (click)="goToDetails(item.id)"
-    ></app-list-item>
+    <app-list-item *ngFor="let item of filteredItems" [item]="item" (click)="goToDetails(item.id)"></app-list-item>
   </section>
 
-  <p
-    *ngIf="filteredItems.length === 0"
-    class="offers-empty"
-  >
-    Brak ogłoszeń spełniających wybrane kryteria.
-  </p>
+  <p *ngIf="filteredItems.length === 0" class="offers-empty">Brak ogłoszeń spełniających wybrane kryteria.</p>
 </section>

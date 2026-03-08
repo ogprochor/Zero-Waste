@@ -7,6 +7,7 @@ import { RegisterComponent } from './features/auth/register/register';
 import { OfferDetailsComponent } from './features/offer-details/offer-details';
 import { AddOfferComponent } from './features/add-offer/add-offer';
 import { EditOfferComponent } from './features/edit-offer/edit-offer';
+import { MyOffersComponent } from './features/my-offers/my-offers'; // 1. DODAJ TEN IMPORT
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -19,6 +20,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: Home },
       { path: 'lista', component: ListPageComponent },
+      { path: 'moje-oferty', component: MyOffersComponent, canActivate: [authGuard] }, // 2. DODAJ TĘ LINIĘ
       { path: 'offers/:id', component: OfferDetailsComponent },
       { path: 'offers/:id/edit', component: EditOfferComponent, canActivate: [authGuard] },
       { path: 'dodaj-oferte', component: AddOfferComponent, canActivate: [authGuard] },

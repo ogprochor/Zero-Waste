@@ -24,6 +24,12 @@ export class ListPageComponent implements OnInit {
   categories: CategoryDto[] = [];
   private categoryMap = new Map<number, string>();
 
+  searchTerm = '';
+  selectedCategory = 'Wszystkie';
+  selectedCity = '';
+  selectedType: 'free' | 'exchange' | 'sell' | '' = '';
+  sortOption: 'newest' | 'name-asc' | 'name-desc' = 'newest';
+
   constructor(
     private router: Router,
     private itemService: ItemService,
@@ -73,12 +79,6 @@ export class ListPageComponent implements OnInit {
     return this.authService.isLoggedIn();
   }
 
-  searchTerm = '';
-  selectedCategory = 'Wszystkie';
-  selectedCity = '';
-  selectedType: 'free' | 'exchange' | 'sell' | '' = '';
-  sortOption: 'newest' | 'name-asc' | 'name-desc' = 'newest';
-
   setType(type: 'free' | 'exchange' | 'sell'): void {
     this.selectedType = type;
   }
@@ -102,13 +102,8 @@ export class ListPageComponent implements OnInit {
       const itemCity = String(item.city || '').toLowerCase();
       const type = String(item.type || '');
 
-      const matchesSearch =
-        !search || name.includes(search) || description.includes(search);
-
-      const matchesCategory =
-        this.selectedCategory === 'Wszystkie' ||
-        category === this.selectedCategory;
-
+      const matchesSearch = !search || name.includes(search) || description.includes(search);
+      const matchesCategory = this.selectedCategory === 'Wszystkie' || category === this.selectedCategory;
       const matchesCity = !city || itemCity.includes(city);
       const matchesType = !this.selectedType || type === this.selectedType;
 
@@ -119,17 +114,11 @@ export class ListPageComponent implements OnInit {
 
     switch (this.sortOption) {
       case 'name-asc':
-        result.sort((a, b) =>
-          String(a.name || '').localeCompare(String(b.name || ''))
-        );
+        result.sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')));
         break;
-
       case 'name-desc':
-        result.sort((a, b) =>
-          String(b.name || '').localeCompare(String(a.name || ''))
-        );
+        result.sort((a, b) => String(b.name || '').localeCompare(String(a.name || '')));
         break;
-
       case 'newest':
       default:
         break;

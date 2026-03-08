@@ -53,6 +53,10 @@ export class AuthService {
     return this.http.post<LoginResponse>(`${this.API_URL}/auth/login-json`, data);
   }
 
+  fetchCurrentUser(): Observable<CurrentUser> {
+  return this.http.get<CurrentUser>(`${this.API_URL}/auth/me`);
+}
+
   getCurrentUser(): CurrentUser | null {
     return this.currentUserSubject.value;
   }

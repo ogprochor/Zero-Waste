@@ -36,8 +36,13 @@ export class OfferService {
     };
   }
 
-  getOffers(): Observable<Offer[]> {
-    return this.http.get<any>(`${this.offersUrl}?page=1&page_size=20`).pipe(
+  getOffers(ownerId?: number): Observable<Offer[]> {
+    let url = `${this.offersUrl}?page=1&page_size=100`;
+    if (ownerId) {
+      url += `&owner_id=${ownerId}`;
+    }
+
+    return this.http.get<any>(url).pipe(
       map((response) => {
         const offers = Array.isArray(response)
           ? response
@@ -50,6 +55,10 @@ export class OfferService {
           .map((offer: any) => this.normalizeOffer(offer));
       })
     );
+  }
+
+  getUserOffers(userId: number): Observable<Offer[]> {
+    return this.getOffers(userId);
   }
 
   getOfferById(id: number): Observable<Offer> {
