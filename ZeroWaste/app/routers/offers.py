@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends, UploadFile, File, status, Query
-from typing import List
+from typing import List, Optional
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
 import os
@@ -27,15 +27,14 @@ class PaginatedOffers(BaseModel):
     page_size: int
     total: int
 
-
 @router.get("/", response_model=PaginatedOffers)
 def get_offers(
     page: int = Query(1, ge=1),
-    page_size: int = Query(10, ge=1, le=50),
-    category_id: int | None = None,
-    location: str | None = None,
-    owner_id: int | None = None,
-    title: str | None = None,
+    page_size: int = Query(10, ge=1, le=150),
+    category_id: Optional[int] = None,
+    location: Optional[str] = None,
+    owner_id: Optional[int] = None,
+    title: Optional[str] = None,
     db: Session = Depends(get_db),
 ):
     try:
@@ -70,22 +69,21 @@ def get_offers(
             "total": total
         }
 
-    except Exception:
+    except Exception as e:
+        print(f"DEBUG: Error fetching offers: {str(e)}")
         raise HTTPException(
-            status_code= status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to fetch offers"
         )
-
 
 @router.get("/{offer_id}", response_model=Offer)
 def get_offer(offer_id: int, db: Session = Depends(get_db)):
     offer = db.query(OfferModel).filter(OfferModel.id == offer_id).first()
     if not offer:
         raise HTTPException(
-            status_code= status.HTTP_404_NOT_FOUND,
+            status_code=status.HTTP_404_NOT_FOUND,
             detail="Offer not found")
     return offer
-
 
 @router.post("/", response_model=Offer, status_code=201)
 def create_offer(
@@ -96,7 +94,7 @@ def create_offer(
     category = db.get(Category, offer_data.category_id)
     if category is None:
         raise HTTPException(
-            status_code= status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_400_BAD_REQUEST,
             detail="Category does not exist")
 
     new_offer = OfferModel(**offer_data.dict(), owner_id=current_user.id)
@@ -104,7 +102,6 @@ def create_offer(
     db.commit()
     db.refresh(new_offer)
     return new_offer
-
 
 @router.put("/{offer_id}", response_model=Offer)
 def update_offer(
@@ -118,7 +115,7 @@ def update_offer(
 
     if not data:
         raise HTTPException(
-            status_code= status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_400_BAD_REQUEST,
             detail="No data provided for update"
         )
 
@@ -128,7 +125,6 @@ def update_offer(
     db.commit()
     db.refresh(offer)
     return offer
-
 
 @router.delete("/{offer_id}")
 def delete_offer(
@@ -148,11 +144,10 @@ def delete_offer(
     except Exception:
         db.rollback()
         raise HTTPException(
-            status_code=  status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Database error"
         )
     return {"detail": "Offer deleted"}
-
 
 @router.post("/{offer_id}/image")
 def upload_offer_image(
@@ -164,7 +159,7 @@ def upload_offer_image(
 ):
     if not file.content_type.startswith("image/"):
         raise HTTPException(
-            status_code= status.HTTP_400_BAD_REQUEST,
+            status_code=status.HTTP_400_BAD_REQUEST,
             detail="File must be an image")
 
     ext = file.filename.split(".")[-1]
