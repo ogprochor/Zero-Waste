@@ -72,7 +72,7 @@ def get_offers(
 
     except Exception:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code= status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to fetch offers"
         )
 
@@ -81,7 +81,9 @@ def get_offers(
 def get_offer(offer_id: int, db: Session = Depends(get_db)):
     offer = db.query(OfferModel).filter(OfferModel.id == offer_id).first()
     if not offer:
-        raise HTTPException(status_code=404, detail="Offer not found")
+        raise HTTPException(
+            status_code= status.HTTP_404_NOT_FOUND,
+            detail="Offer not found")
     return offer
 
 
@@ -93,7 +95,9 @@ def create_offer(
 ):
     category = db.get(Category, offer_data.category_id)
     if category is None:
-        raise HTTPException(status_code=400, detail="Category does not exist")
+        raise HTTPException(
+            status_code= status.HTTP_400_BAD_REQUEST,
+            detail="Category does not exist")
 
     new_offer = OfferModel(**offer_data.dict(), owner_id=current_user.id)
     db.add(new_offer)
@@ -114,7 +118,7 @@ def update_offer(
 
     if not data:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
+            status_code= status.HTTP_400_BAD_REQUEST,
             detail="No data provided for update"
         )
 
@@ -144,7 +148,7 @@ def delete_offer(
     except Exception:
         db.rollback()
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=  status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Database error"
         )
     return {"detail": "Offer deleted"}
@@ -159,7 +163,9 @@ def upload_offer_image(
     db: Session = Depends(get_db)
 ):
     if not file.content_type.startswith("image/"):
-        raise HTTPException(status_code=400, detail="File must be an image")
+        raise HTTPException(
+            status_code= status.HTTP_400_BAD_REQUEST,
+            detail="File must be an image")
 
     ext = file.filename.split(".")[-1]
     filename = f"{uuid.uuid4()}.{ext}"

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -29,7 +29,9 @@ def get_users(db: Session = Depends(get_db)):
 def get_user(user_id: int, db: Session = Depends(get_db)):
     user = db.get(UserModel, user_id)
     if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(
+            status_code= status.HTTP_404_BAD_REQUEST,
+            detail="User not found")
     return user
 
 
@@ -41,7 +43,9 @@ def update_user(
 ):
     user = db.get(UserModel, user_id)
     if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(
+            status_code= status.HTTP_404_NOT_FOUND,
+            detail="User not found")
 
     if user_data.username is not None:
         user.username = user_data.username
@@ -66,7 +70,9 @@ def update_user(
 def delete_user(user_id: int, db: Session = Depends(get_db)):
     user = db.get(UserModel, user_id)
     if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(
+            status_code= status.HTTP_404_NOT_FOUND,
+            detail="User not found")
 
     try:
         db.delete(user)
@@ -86,12 +92,14 @@ def upload_or_update_avatar(
 ):
     user = db.get(UserModel, user_id)
     if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(
+            status_code= status.HTTP_404_NOT_FOUND,
+            detail="User not found")
 
     ext = Path(file.filename).suffix.lower()
     if ext not in ALLOWED_EXTENSIONS:
         raise HTTPException(
-            status_code=400,
+            status_code= status.HTTP_400_BAD_REQUEST,
             detail="Invalid file type. Allowed: jpg, jpeg, png, webp"
         )
 
@@ -128,10 +136,14 @@ def delete_avatar(
 ):
     user = db.get(UserModel, user_id)
     if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        raise HTTPException(
+            status_code= status.HTTP_404_NOT_FOUND,
+            detail="User not found")
 
     if not user.avatar_url:
-        raise HTTPException(status_code=400, detail="User has no avatar")
+        raise HTTPException(
+            status_code= status.HTTP_400_BAD_REQUEST,
+            detail="User has no avatar")
 
     file_path = Path(user.avatar_url.lstrip("/"))
     if file_path.exists():
@@ -152,7 +164,9 @@ def delete_avatar(
 def get_avatar(user_id: int, db: Session = Depends(get_db)):
     user = db.get(UserModel, user_id)
     if user is None or not user.avatar_url:
-        raise HTTPException(status_code=404, detail="Avatar not found")
+        raise HTTPException(
+            status_code= status.HTTP_404_NOT_FOUND,
+            detail="Avatar not found")
 
     return {"avatar_url": user.avatar_url}
 

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException,status
 from pathlib import Path
 import uuid
 
@@ -14,13 +14,17 @@ ALLOWED = {"image/jpeg", "image/png", "image/webp", "image/gif"}
 @router.post("")
 async def upload_images(files: list[UploadFile] = File(...)):
     if not files:
-        raise HTTPException(status_code=400, detail="No files provided")
+        raise HTTPException(
+            status_code= status.HTTP_400_BAD_REQUEST,
+            detail="No files provided")
 
     urls: list[str] = []
 
     for f in files:
         if f.content_type not in ALLOWED:
-            raise HTTPException(status_code=400, detail=f"Unsupported type: {f.content_type}")
+            raise HTTPException(
+                status_code= status.HTTP_400_BAD_REQUEST,
+                detail=f"Unsupported type: {f.content_type}")
 
         suffix = Path(f.filename).suffix.lower() or ".jpg"
         name = f"{uuid.uuid4().hex}{suffix}"

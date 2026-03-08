@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -22,7 +22,9 @@ def get_categories(db: Session = Depends(get_db)):
 def get_category(category_id: int, db: Session = Depends(get_db)):
     category = db.get(CategoryModel, category_id)
     if category is None:
-        raise HTTPException(status_code=404, detail="Category not found")
+        raise HTTPException(
+            status_code= status.HTTP_404_NOT_FOUND,
+            detail="Category not found")
     return category
 
 
@@ -34,7 +36,9 @@ def create_category(category_data: CategoryCreate, db: Session = Depends(get_db)
         .first()
     )
     if existing:
-        raise HTTPException(status_code=400, detail="Category already exists")
+        raise HTTPException(
+            status_code= status.HTTP_400_BAD_REQUEST,
+            detail="Category already exists")
 
     new_category = CategoryModel(**category_data.dict())
 
@@ -57,7 +61,9 @@ def update_category(
 ):
     category = db.get(CategoryModel, category_id)
     if category is None:
-        raise HTTPException(status_code=404, detail="Category not found")
+        raise HTTPException(
+            status_code= status.HTTP_404_NOT_FOUND,
+            detail="Category not found")
 
     for key, value in category_data.dict(exclude_unset=True).items():
         setattr(category, key, value)
@@ -76,7 +82,9 @@ def update_category(
 def delete_category(category_id: int, db: Session = Depends(get_db)):
     category = db.get(CategoryModel, category_id)
     if category is None:
-        raise HTTPException(status_code=404, detail="Category not found")
+        raise HTTPException(
+            status_code= status.HTTP_404_NOT_FOUND,
+            detail="Category not found")
 
     offers_count = (
         db.query(OfferModel)
@@ -85,7 +93,7 @@ def delete_category(category_id: int, db: Session = Depends(get_db)):
     )
     if offers_count > 0:
         raise HTTPException(
-            status_code=400,
+            status_code= status.HTTP_400_BAD_REQUEST,
             detail="Cannot delete category with existing offers"
         )
 
