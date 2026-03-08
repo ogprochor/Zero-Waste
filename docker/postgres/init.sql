@@ -32,7 +32,7 @@ INSERT INTO categories (name) VALUES
     ('Książki'),
     ('Meble'),
     ('Zabawki'),
-    ('Wyposarzenie domu')
+    ('Wyposażenie domu')
 ON CONFLICT (name) DO NOTHING;
 
 INSERT INTO users (username, email, hashed_password) VALUES
