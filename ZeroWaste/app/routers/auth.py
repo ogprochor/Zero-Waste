@@ -11,13 +11,15 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from ZeroWaste.app.core.security import (
     hash_password, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 )
+
+from ZeroWaste.app.core.deps import get_current_user
 router = APIRouter(
     prefix="/auth",
     tags=["auth"]
 )
 
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/auth/login",
+    tokenUrl="/auth/login-json",
     auto_error=False
 )
 
@@ -53,31 +55,43 @@ def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
 
     return new_user
 
+def authenticate_user(email: str, password: str, db: Session):
+    user = db.query(UserModel).filter(UserModel.email == email).first()
 
-'''@router.post("/login", response_model=Token)
+    if not user or not verify_password(password, user.hashed_password):
+        return None
+
+    return user
+
+
+@router.post("/login", response_model=Token)
 def login_for_access_token(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db)
 ):
-    user = db.query(UserModel).filter(
-        UserModel.email == form_data.username
-    ).first()
 
-    if not user or not verify_password(form_data.password, user.hashed_password):
+    user = authenticate_user(form_data.username, form_data.password, db)
+
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    access_token = create_access_token(
-        data={"sub": str(user.id)}
-    )
+    access_token = create_access_token(data={"sub": str(user.id)})
 
     return {
         "access_token": access_token,
-        "token_type": "bearer"
-    }'''
+        "token_type": "bearer",
+        "user": {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email
+        }
+    }
+
+
 
 @router.post("/login-json", response_model=Token)
 
@@ -102,27 +116,9 @@ def login_user_json(data: UserLogin, db: Session = Depends(get_db)):
         }
     }
 
-
-
-
-
-
-
-# STARY LOGIN MOZE SIE PRZYDA
-'''
-@router.post("/login-legacy", response_model=User)
-def login_user_legacy(
-    data: UserLogin,
-    db: Session = Depends(get_db)
+@router.get("/me", response_model=User)
+def get_current_user_profile(
+        current_user: UserModel = Depends(get_current_user)
 ):
-    user = db.query(UserModel).filter(data.email == UserModel.email).first()
+    return current_user
 
-    if not user or not verify_password(data.password, user.hashed_password):
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid email or password"
-        )
-
-    return user
-    
-'''
