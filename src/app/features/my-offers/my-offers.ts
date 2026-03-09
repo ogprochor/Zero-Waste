@@ -6,6 +6,7 @@ import { ListItemComponent } from '../../shared/list-item/list-item';
 import { OfferService } from '../../services/offer.service';
 import { CategoryService } from '../../services/category.service';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-my-offers',
@@ -22,7 +23,8 @@ export class MyOffersComponent implements OnInit {
     private router: Router,
     private offerService: OfferService,
     private categoryService: CategoryService,
-    private authService: AuthService
+    private authService: AuthService,
+    private notificationService: NotificationService 
   ) {}
 
   ngOnInit(): void {
@@ -33,7 +35,7 @@ export class MyOffersComponent implements OnInit {
     }
 
     forkJoin({
-      offers: this.offerService.getOffers(userId),
+      offers: this.offerService.getUserOffers(userId),
       categories: this.categoryService.getCategories(),
     }).subscribe({
       next: ({ offers, categories }) => {

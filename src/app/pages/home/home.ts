@@ -17,28 +17,20 @@ export class Home implements OnInit {
   error: string | null = null;
 
   constructor(private offerService: OfferService) {}
-
+  
   ngOnInit(): void {
-    this.offerService.getOffers().subscribe({
-      next: (data: any[]) => {
-        console.log('Dane z backendu:', data);
-
-        this.items = data
-          .map((offer: any) => ({
-            ...offer,
-            name: offer.title ?? offer.name ?? '',
-            imageUrl: offer.image_url ?? null,
-            description: offer.description ?? ''
-          }))
-          .slice(0, 20);
-
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.error = 'Nie udało się pobrać ofert.';
-        this.loading = false;
-      },
-    });
+      this.offerService.getOffers({ page_size: 20 }).subscribe({
+        next: (response) => {
+          this.items = response.items.map(offer => 
+            this.offerService.toListItem(offer)
+          );
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Błąd pobierania ofert:', err);
+          this.error = 'Nie udało się pobrać ofert.';
+          this.loading = false;
+        }
+      });
   }
 }

@@ -5,8 +5,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 import { CategoryService, CategoryDto } from '../../services/category.service';
-import { ItemService, OfferDto, OfferUpdateDto } from '../../services/item.service';
+import { OfferService, Offer, OfferUpdate } from '../../services/offer.service';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-edit-offer',
@@ -17,7 +18,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class EditOfferComponent implements OnInit {
   offerId!: number;
-  offer: OfferDto | null = null;
+  offer: Offer | null = null;
   categories: CategoryDto[] = [];
 
   loading = true;
@@ -31,8 +32,9 @@ export class EditOfferComponent implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private categoryService: CategoryService,
-    private itemService: ItemService,
+    private offerService: OfferService,
     private authService: AuthService,
+    private notificationService: NotificationService,
     private router: Router
   ) {}
 
@@ -50,11 +52,11 @@ export class EditOfferComponent implements OnInit {
 
     try {
       const [offerResult, categories] = await Promise.all([
-        firstValueFrom(this.itemService.getOfferById(this.offerId)),
+        firstValueFrom(this.offerService.getOfferById(this.offerId)),
         firstValueFrom(this.categoryService.getCategories()),
       ]);
 
-      const offer = offerResult as OfferDto;
+      const offer = offerResult as Offer;
 
       this.offer = offer;
       this.categories = categories ?? [];
@@ -68,7 +70,7 @@ export class EditOfferComponent implements OnInit {
       }
 
       this.form.patchValue({
-        title: offer.title ?? offer.name ?? '',
+        title: offer.title ?? '',
         description: offer.description ?? '',
         location: offer.location ?? '',
         category_id: offer.category_id ?? null,
@@ -98,7 +100,7 @@ export class EditOfferComponent implements OnInit {
     try {
       const v = this.form.value;
 
-      const payload: OfferUpdateDto = {
+      const payload: OfferUpdate = {
         title: String(v.title || '').trim(),
         description: v.description?.trim() || null,
         location: v.location?.trim() || null,
@@ -107,8 +109,8 @@ export class EditOfferComponent implements OnInit {
         image_url: v.image_url || null,
       };
 
-      await firstValueFrom(this.itemService.updateOffer(this.offerId, payload));
-
+      await firstValueFrom(this.offerService.updateOffer(this.offerId, payload));
+      this.notificationService.success('Oferta została zaktualizowana.');
       this.router.navigate(['/offers', this.offerId], {
         queryParams: { msg: 'Oferta została zaktualizowana.' },
       });
@@ -118,5 +120,17 @@ export class EditOfferComponent implements OnInit {
     } finally {
       this.submitting = false;
     }
+  }
+
+    getFieldError(fieldName: string): string | null {
+    const control = this.form.get(fieldName);
+    if (!control || !control.touched || !control.errors) return null;
+
+    if (control.errors['required']) return 'To pole jest wymagane.';
+    if (control.errors['minlength']) {
+      return `Minimalna długość to ${control.errors['minlength'].requiredLength} znaków.`;
+    }
+    
+    return null;
   }
 }

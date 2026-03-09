@@ -11,23 +11,21 @@
     <form (ngSubmit)="submit()" [formGroup]="form">
 
       <div class="grid">
-        <div class="field">
-          <label for="title">
-            <span>Tytuł ogłoszenia *</span>
-          </label>
-          <input
-            type="text"
-            id="title"
-            formControlName="title"
-            placeholder="np. Książki do oddania w dobre ręce"
-          />
-          <small
-            class="err"
-            *ngIf="form.get('title')?.touched && form.get('title')?.invalid"
-          >
-            Tytuł musi mieć co najmniej 3 znaki.
-          </small>
-        </div>
+          <div class="field">
+            <label for="title">
+              <span>Tytuł ogłoszenia *</span>
+            </label>
+            <input
+              type="text"
+              id="title"
+              formControlName="title"
+              placeholder="np. Książki do oddania w dobre ręce"
+              [class.invalid]="form.get('title')?.touched && form.get('title')?.invalid"
+            />
+            <small class="err" *ngIf="getFieldError('title')">
+              {{ getFieldError('title') }}
+            </small>
+          </div>
 
         <div class="field">
           <label for="category">
@@ -38,6 +36,7 @@
             id="category"
             formControlName="category_id"
             [disabled]="loadingCategories"
+            [class.invalid]="form.get('category_id')?.touched && form.get('category_id')?.invalid"
           >
             <option [ngValue]="null">
               {{ loadingCategories ? 'Ładowanie kategorii...' : 'Wybierz kategorię z listy...' }}
@@ -48,11 +47,8 @@
             </option>
           </select>
 
-          <small
-            class="err"
-            *ngIf="form.get('category_id')?.touched && form.get('category_id')?.invalid"
-          >
-            Wybór kategorii jest wymagany.
+          <small class="err" *ngIf="getFieldError('category_id')">
+            {{ getFieldError('category_id') }}
           </small>
 
           <small
@@ -62,7 +58,7 @@
             Nie znaleziono kategorii do wyświetlenia.
           </small>
         </div>
-
+        
         <div class="field field--full">
           <label for="description">
             <span>Opis przedmiotu</span>
@@ -131,13 +127,17 @@
         </div>
       </div>
 
-      <p class="msg msg--error" *ngIf="error">
-        {{ error }}
-      </p>
+      <app-form-message 
+        *ngIf="error" 
+        type="error" 
+        [message]="error">
+      </app-form-message>
 
-      <p class="msg msg--success" *ngIf="success">
-        {{ success }}
-      </p>
+      <app-form-message 
+        *ngIf="success" 
+        type="success" 
+        [message]="success">
+      </app-form-message>
 
       <div class="actions">
         <button

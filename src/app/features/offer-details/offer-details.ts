@@ -31,7 +31,7 @@ import { OfferService, Offer } from '../../services/offer.service';
           </div>
 
           <span class="location-badge" *ngIf="offer.location">📍 {{ offer.location }}</span>
-          <h2>{{ offer.title || offer.name }}</h2>
+          <h2>{{ offer.title }}</h2>  <!-- POPRAWIONE -->
           <p class="description">{{ offer.description }}</p>
 
           <p *ngIf="offer.price != null" class="description">
@@ -54,7 +54,7 @@ import { OfferService, Offer } from '../../services/offer.service';
           <h3>Potwierdź usunięcie</h3>
           <p>
             Czy na pewno chcesz trwale usunąć ofertę:
-            <strong>{{ offer.title || offer.name }}</strong>?
+            <strong>{{ offer.title }}</strong>?  <!-- POPRAWIONE -->
           </p>
           <div class="modal-buttons">
             <button class="btn-cancel" (click)="showDeleteModal = false" [disabled]="deleting">

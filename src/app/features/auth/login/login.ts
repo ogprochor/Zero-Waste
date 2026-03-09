@@ -8,7 +8,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { catchError, finalize, throwError } from 'rxjs';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +21,6 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatInputModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatSnackBarModule
   ],
   templateUrl: './login.html',
   styleUrls: ['./login.scss']
@@ -34,7 +33,7 @@ export class LoginComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private notificationService: NotificationService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -49,7 +48,7 @@ export class LoginComponent {
     });
 
     if (this.loginForm.invalid) {
-      this.snackBar.open('Popraw błędy w formularzu.', 'OK', { duration: 3000 });
+      this.notificationService.warning('Popraw błędy w formularzu.');
       return;
     }
 
@@ -63,11 +62,6 @@ export class LoginComponent {
     this.authService.login(payload)
       .pipe(
         catchError(err => {
-          this.snackBar.open(
-            err.error?.detail || 'Nieprawidłowy email lub hasło',
-            'Zamknij',
-            { duration: 7000 }
-          );
           return throwError(() => err);
         }),
         finalize(() => {
@@ -76,7 +70,7 @@ export class LoginComponent {
       )
       .subscribe(response => {
         this.authService.setSession(response.access_token, response.user);
-        this.snackBar.open('Zalogowano pomyślnie.', 'OK', { duration: 2500 });
+        this.notificationService.success('Zalogowano pomyślnie!');
         this.router.navigate(['/']);
       });
   }

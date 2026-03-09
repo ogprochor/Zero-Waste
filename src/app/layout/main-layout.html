@@ -15,6 +15,13 @@
         Dodaj ofertę
       </a>
 
+      <a
+        *ngIf="isLoggedIn()"
+        routerLink="/moje-oferty" 
+        (click)="drawer.close()">
+        Moje ogłoszenia
+      </a>
+
       <ng-container *ngIf="currentUser$ | async as user; else mobileGuestButtons">
         <button
           mat-stroked-button
@@ -66,6 +73,13 @@
             routerLink="/dodaj-oferte"
             routerLinkActive="is-active">
             Dodaj ofertę
+          </a>
+
+          <a
+            *ngIf="isLoggedIn()"
+            routerLink="/moje-oferty"
+            routerLinkActive="is-active">
+            Moje ogłoszenia
           </a>
         </nav>
 

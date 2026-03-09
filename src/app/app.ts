@@ -1,10 +1,11 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from './services/auth.service';
+import { NotificationComponent } from './shared/notification/notification';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, NotificationComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

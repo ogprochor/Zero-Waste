@@ -3,39 +3,31 @@ import { NgFor, NgIf } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-
+import { FormMessageComponent } from '../../shared/form-message/form-message';
 import { CategoryService, CategoryDto } from '../../services/category.service';
-import {
-  ItemService,
-  OfferCreateDto,
-  OfferDto,
-  UploadOfferImageResponseDto
-} from '../../services/item.service';
+import { OfferService, Offer, OfferCreate } from '../../services/offer.service';
 
 @Component({
   selector: 'app-add-offer',
   standalone: true,
-  imports: [ReactiveFormsModule, NgFor, NgIf, RouterLink],
+  imports: [ReactiveFormsModule, NgFor, NgIf, RouterLink, FormMessageComponent],
   templateUrl: './add-offer.html',
   styleUrls: ['./add-offer.scss'],
 })
 export class AddOfferComponent implements OnInit, OnDestroy {
   categories: CategoryDto[] = [];
-
   loadingCategories = true;
   submitting = false;
   error: string | null = null;
   success: string | null = null;
-
   form!: FormGroup;
-
   selectedFiles: File[] = [];
   previews: string[] = [];
 
   constructor(
     private fb: FormBuilder,
     private categoryService: CategoryService,
-    private itemService: ItemService,
+    private offerService: OfferService,
     private router: Router
   ) {}
 
@@ -49,18 +41,8 @@ export class AddOfferComponent implements OnInit, OnDestroy {
     });
 
     this.categoryService.getCategories().subscribe({
-      next: (cats: any) => {
-        const normalizedCategories = Array.isArray(cats)
-          ? cats
-          : Array.isArray(cats?.items)
-          ? cats.items
-          : [];
-
-        this.categories = normalizedCategories.map((c: any) => ({
-          id: c.id,
-          name: c.name,
-        }));
-
+      next: (cats) => {
+        this.categories = cats;
         this.loadingCategories = false;
       },
       error: (err) => {
@@ -70,20 +52,34 @@ export class AddOfferComponent implements OnInit, OnDestroy {
       },
     });
   }
+  
+  getFieldError(fieldName: string): string | null {
+    const control = this.form.get(fieldName);
+    if (!control || !control.touched || !control.errors) return null;
+
+    if (control.errors['required']) return 'To pole jest wymagane.';
+    if (control.errors['minlength']) {
+      return `Minimalna długość to ${control.errors['minlength'].requiredLength} znaków.`;
+    }
+    if (control.errors['email']) return 'Nieprawidłowy format email.';
+    if (control.errors['pattern']) return 'Pole zawiera niedozwolone znaki.';
+    
+    return null;
+  }
 
   ngOnDestroy(): void {
-    this.previews.forEach((u) => URL.revokeObjectURL(u));
+    this.previews.forEach(u => URL.revokeObjectURL(u));
   }
 
   onFilesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const files = Array.from(input.files ?? []);
 
-    this.previews.forEach((u) => URL.revokeObjectURL(u));
+    this.previews.forEach(u => URL.revokeObjectURL(u));
     this.previews = [];
     this.selectedFiles = [];
 
-    const limited = files.slice(0, 1);
+    const limited = files.slice(0, 1); // Tylko 1 zdjęcie
 
     for (const f of limited) {
       if (!f.type.startsWith('image/')) continue;
@@ -95,11 +91,7 @@ export class AddOfferComponent implements OnInit, OnDestroy {
   }
 
   removeImage(index: number): void {
-    const url = this.previews[index];
-    if (url) {
-      URL.revokeObjectURL(url);
-    }
-
+    URL.revokeObjectURL(this.previews[index]);
     this.previews.splice(index, 1);
     this.selectedFiles.splice(index, 1);
   }
@@ -119,7 +111,7 @@ export class AddOfferComponent implements OnInit, OnDestroy {
     try {
       const v = this.form.value;
 
-      const payload: OfferCreateDto = {
+      const payload: OfferCreate = {
         title: String(v.title || '').trim(),
         description: v.description?.trim() || null,
         location: v.location?.trim() || null,
@@ -129,13 +121,13 @@ export class AddOfferComponent implements OnInit, OnDestroy {
       };
 
       const created = await firstValueFrom(
-        this.itemService.createOffer(payload)
-      ) as OfferDto;
+        this.offerService.createOffer(payload)
+      );
 
       if (this.selectedFiles.length > 0 && created?.id) {
         await firstValueFrom(
-          this.itemService.uploadOfferImage(created.id, this.selectedFiles[0])
-        ) as UploadOfferImageResponseDto;
+          this.offerService.uploadOfferImage(created.id, this.selectedFiles[0])
+        );
       }
 
       this.success = 'Oferta dodana!';
@@ -160,8 +152,6 @@ export class AddOfferComponent implements OnInit, OnDestroy {
         this.error = 'Brak połączenia z backendem.';
       } else if (err?.status === 401) {
         this.error = 'Sesja wygasła. Zaloguj się ponownie.';
-      } else if (err?.status === 422) {
-        this.error = 'Backend odrzucił dane formularza.';
       } else {
         this.error = 'Nie udało się dodać oferty.';
       }

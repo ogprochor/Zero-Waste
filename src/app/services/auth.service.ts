@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 export interface CurrentUser {
   id: number;
@@ -38,24 +39,25 @@ export class AuthService {
     }
   }
 
-  register(data: {
-    username: string;
-    email: string;
-    password: string;
-  }): Observable<any> {
-    return this.http.post(`${this.API_URL}/auth/register`, data);
+  register(data: { username: string; email: string; password: string }): Observable<any> {
+    return this.http.post(`${this.API_URL}/auth/register`, data).pipe(
+      catchError((error) => {
+        if (error.status === 400 && error.error?.detail) {
+          console.error('Błąd rejestracji:', error.error.detail);
+        }
+        return throwError(() => error);
+      })
+    ); 
   }
 
-  login(data: {
-    email: string;
-    password: string;
-  }): Observable<LoginResponse> {
+  login(data: { email: string; password: string }): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.API_URL}/auth/login-json`, data);
   }
 
+  // NOWA METODA Z GIT - dla /auth/me
   fetchCurrentUser(): Observable<CurrentUser> {
-  return this.http.get<CurrentUser>(`${this.API_URL}/auth/me`);
-}
+    return this.http.get<CurrentUser>(`${this.API_URL}/auth/me`);
+  }
 
   getCurrentUser(): CurrentUser | null {
     return this.currentUserSubject.value;

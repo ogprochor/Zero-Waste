@@ -15,7 +15,7 @@ import { RouterModule, Router } from '@angular/router';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AuthService } from '../../../services/auth.service';
 import { catchError, finalize, throwError } from 'rxjs';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-register',
@@ -28,7 +28,6 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
     MatButtonModule,
     MatCheckboxModule,
     RouterModule,
-    MatSnackBarModule
   ],
   templateUrl: './register.html',
   styleUrls: ['./register.scss']
@@ -40,7 +39,7 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private snackBar: MatSnackBar,
+    private notificationService: NotificationService,
     private router: Router
   ) {
     this.registerForm = this.fb.group(
@@ -100,11 +99,7 @@ export class RegisterComponent {
     });
 
     if (this.registerForm.invalid) {
-      this.snackBar.open(
-        'Formularz zawiera błędy. Popraw je przed wysłaniem.',
-        'OK',
-        { duration: 3000 }
-      );
+      this.notificationService.warning('Formularz zawiera błędy. Popraw je przed wysłaniem.');
       return;
     }
 
@@ -121,37 +116,6 @@ export class RegisterComponent {
       .pipe(
         catchError((err) => {
           console.error('Błąd rejestracji:', err);
-
-          const detail = err?.error?.detail;
-
-          if (Array.isArray(detail)) {
-            detail.forEach((d: any) => {
-              this.snackBar.open(
-                d?.msg || 'Błąd walidacji',
-                'Zamknij',
-                { duration: 5000 }
-              );
-            });
-          } else if (typeof detail === 'string') {
-            this.snackBar.open(detail, 'Zamknij', { duration: 4000 });
-          } else if (err.status === 0) {
-            this.snackBar.open(
-              'Brak połączenia z backendem albo błąd CORS.',
-              'Zamknij',
-              { duration: 5000 }
-            );
-          } else if (err.status === 500) {
-            this.snackBar.open(
-              'Backend zwrócił błąd 500. Sprawdź logi Dockera.',
-              'Zamknij',
-              { duration: 5000 }
-            );
-          } else {
-            this.snackBar.open('Błąd rejestracji', 'Zamknij', {
-              duration: 4000
-            });
-          }
-
           return throwError(() => err);
         }),
         finalize(() => {
@@ -159,9 +123,7 @@ export class RegisterComponent {
         })
       )
       .subscribe(() => {
-        this.snackBar.open('Konto zostało utworzone pomyślnie.', 'OK', {
-          duration: 3000
-        });
+        this.notificationService.success('Konto zostało utworzone pomyślnie.');
         this.router.navigate(['/login']);
       });
   }
@@ -172,5 +134,29 @@ export class RegisterComponent {
       control?.hasError(errorName) &&
       (control.touched || control.dirty)
     );
+  }
+
+  getFieldError(fieldName: string): string | null {
+    const control = this.registerForm.get(fieldName);
+    if (!control || !control.touched || !control.errors) return null;
+
+    if (control.errors['required']) return 'To pole jest wymagane.';
+    if (control.errors['minlength']) {
+      return `Minimalna długość to ${control.errors['minlength'].requiredLength} znaków.`;
+    }
+    if (control.errors['maxlength']) {
+      return `Maksymalna długość to ${control.errors['maxlength'].requiredLength} znaków.`;
+    }
+    if (control.errors['email']) return 'Nieprawidłowy format email.';
+    if (control.errors['pattern']) {
+      if (fieldName === 'username') {
+        return 'Nazwa użytkownika może zawierać tylko litery, cyfry, _ . -';
+      }
+      if (fieldName === 'password') {
+        return 'Hasło musi zawierać co najmniej jedną wielką literę i jeden znak specjalny';
+      }
+    }
+    
+    return null;
   }
 }
