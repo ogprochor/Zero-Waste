@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres:16
+    container_name: zerowaste_db
+    restart: always
+    environment:
+      POSTGRES_USER: zerowaste_user
+      POSTGRES_PASSWORD: zerowaste_pass
+      POSTGRES_DB: zerowaste
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+
+volumes:
+  postgres_data:
