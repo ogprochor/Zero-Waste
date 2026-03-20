@@ -1,0 +1,49 @@
+.list-item {
+  background: #ffffff;
+  border-radius: 12px; // w makiecie narożniki są dość miękkie, ale nie bardzo okrągłe
+  overflow: hidden;
+  border: 1px solid var(--zw-border-soft);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition:
+    box-shadow 0.15s ease,
+    transform 0.15s ease,
+    border-color 0.15s ease;
+
+  &:hover {
+    box-shadow: 0 15px 30px rgba(15, 23, 42, 0.08);
+    transform: translateY(-2px);
+    border-color: #d1d5db;
+  }
+}
+
+/* obrazek na górze karty, jak w makiecie */
+.list-item__image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+/* treść pod obrazkiem */
+.list-item__content {
+  padding: 12px 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.list-item__name {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--zw-text-main);
+}
+
+.list-item__description {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--zw-text-muted);
+  line-height: 1.4;
+}

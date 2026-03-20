@@ -1,0 +1,147 @@
+<mat-sidenav-container class="layout-container">
+
+  <mat-sidenav #drawer mode="over" class="nav-sidenav">
+    <nav class="nav-sidenav__content">
+      <a routerLink="/" (click)="drawer.close()">Zero Waste</a>
+      <a routerLink="/features" (click)="drawer.close()">Funkcje</a>
+      <a routerLink="/education" (click)="drawer.close()">Edukacja</a>
+      <a routerLink="/organizations" (click)="drawer.close()">Organizacje</a>
+      <a routerLink="/blog" (click)="drawer.close()">Blog</a>
+
+      <a
+        *ngIf="isLoggedIn()"
+        routerLink="/dodaj-oferte"
+        (click)="drawer.close()">
+        Dodaj ofertę
+      </a>
+
+      <a
+        *ngIf="isLoggedIn()"
+        routerLink="/moje-oferty"
+        (click)="drawer.close()">
+        Moje ogłoszenia
+      </a>
+
+      <a
+        *ngIf="isLoggedIn()"
+        routerLink="/profil/edytuj"
+        (click)="drawer.close()">
+        Edytuj profil
+      </a>
+
+      <ng-container *ngIf="currentUser$ | async as user; else mobileGuestButtons">
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="logout(); drawer.close()">
+          Wyloguj się
+        </button>
+      </ng-container>
+
+      <ng-template #mobileGuestButtons>
+        <button
+          mat-stroked-button
+          routerLink="/login"
+          type="button"
+          (click)="drawer.close()">
+          Zaloguj się
+        </button>
+        <button
+          mat-flat-button
+          routerLink="/register"
+          color="primary"
+          class="btn-primary"
+          type="button"
+          (click)="drawer.close()">
+          Dołącz teraz
+        </button>
+      </ng-template>
+    </nav>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <header class="nav-wrapper">
+      <mat-toolbar class="nav">
+        <a routerLink="/" class="nav__brand">
+          <div class="nav__logo">
+            <span>0</span>
+          </div>
+          <span class="nav__brand-text">Zero Waste</span>
+        </a>
+
+        <nav class="nav__menu">
+          <a routerLink="/features" routerLinkActive="is-active">Funkcje</a>
+          <a routerLink="/education" routerLinkActive="is-active">Edukacja</a>
+          <a routerLink="/organizations" routerLinkActive="is-active">Organizacje</a>
+          <a routerLink="/blog" routerLinkActive="is-active">Blog</a>
+
+          <a
+            *ngIf="isLoggedIn()"
+            routerLink="/dodaj-oferte"
+            routerLinkActive="is-active">
+            Dodaj ofertę
+          </a>
+
+          <a
+            *ngIf="isLoggedIn()"
+            routerLink="/moje-oferty"
+            routerLinkActive="is-active">
+            Moje ogłoszenia
+          </a>
+
+          <a
+            *ngIf="isLoggedIn()"
+            routerLink="/profil/edytuj"
+            routerLinkActive="is-active">
+            Edytuj profil
+          </a>
+        </nav>
+
+        <div class="flex-spacer"></div>
+
+        <div class="nav__actions">
+          <ng-container *ngIf="currentUser$ | async as user; else desktopGuestButtons">
+            <span style="margin-right: 12px;">Witaj, {{ user.username }}</span>
+            <button
+              mat-stroked-button
+              type="button"
+              (click)="logout()">
+              Wyloguj się
+            </button>
+          </ng-container>
+
+          <ng-template #desktopGuestButtons>
+            <button
+              mat-button
+              routerLink="/login"
+              type="button">
+              Zaloguj się
+            </button>
+            <button
+              mat-flat-button
+              routerLink="/register"
+              color="primary"
+              class="btn-primary"
+              type="button">
+              Dołącz teraz
+            </button>
+          </ng-template>
+        </div>
+
+        <button
+          mat-icon-button
+          class="nav__burger"
+          type="button"
+          (click)="drawer.toggle()"
+          aria-label="Otwórz menu"
+        >
+          <mat-icon>menu</mat-icon>
+        </button>
+      </mat-toolbar>
+    </header>
+
+    <main class="page-content">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

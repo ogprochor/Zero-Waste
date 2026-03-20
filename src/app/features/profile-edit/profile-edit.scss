@@ -1,0 +1,80 @@
+.profile-edit-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px 16px;
+}
+
+.profile-edit-card {
+  width: 100%;
+  max-width: 500px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+label {
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+input {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.error small {
+  color: #c62828;
+  margin-top: 4px;
+  display: block;
+}
+
+.message {
+  margin: 12px 0;
+  font-size: 14px;
+}
+
+.message.error {
+  color: #c62828;
+}
+
+.message.success {
+  color: #2e7d32;
+}
+
+.buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+button {
+  flex: 1;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button.secondary {
+  background: #e0e0e0;
+}
+
+button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
