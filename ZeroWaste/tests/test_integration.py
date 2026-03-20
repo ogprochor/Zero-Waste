@@ -2,7 +2,7 @@ import requests
 import random
 import string
 
-BASE_URL = "http://127.0.0.1:8080"
+BASE_URL = "http://127.0.0.1:8000"
 
 def random_string(n=6):
     return ''.join(random.choices(string.ascii_lowercase + string.digits, k=n))
