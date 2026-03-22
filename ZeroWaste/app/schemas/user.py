@@ -49,6 +49,8 @@ class UserUpdate(BaseModel):
     username: Optional[str] = Field(default=None, min_length=3, max_length=30)
     email: Optional[EmailStr] = None
     password: Optional[str] = Field(default=None, min_length=8, max_length=72)
+    bio: Optional[str] = None
+    phone: Optional[str] = None
 
     @validator('password')
     def validate_password(cls, v):
@@ -75,6 +77,8 @@ class User(UserBase):
     id: int
     created_at: datetime
     avatar_url: Optional[str] = None
+    bio: Optional[str] = None
+    phone: Optional[str] = None
 
     class Config:
         from_attributes = True

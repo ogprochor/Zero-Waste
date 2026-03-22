@@ -65,6 +65,12 @@ def update_user(
     if user_data.password is not None and user_data.password.strip() != "":
         user.hashed_password = hash_password(user_data.password)
 
+    if user_data.bio is not None:
+        user.bio = user_data.bio
+
+    if user_data.phone is not None:
+        user.phone = user_data.phone
+
     try:
         db.commit()
         db.refresh(user)
