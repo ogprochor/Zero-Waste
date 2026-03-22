@@ -9,6 +9,7 @@ from ZeroWaste.app.db.database import engine
 from ZeroWaste.app.routers import categories, offers, users, auth
 import ZeroWaste.app.routers.categories as categories_module
 
+from ZeroWaste.app.routers import messages
 from ZeroWaste.app.models.category import Category
 from ZeroWaste.app.models.offer import Offer
 from ZeroWaste.app.models.user import User
@@ -99,3 +100,4 @@ app.include_router(categories.router)
 app.include_router(offers.router)
 app.include_router(users.router)
 app.include_router(auth.router)
+app.include_router(messages.router)

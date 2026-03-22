@@ -25,6 +25,22 @@ CREATE TABLE IF NOT EXISTS offers (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE conversations (
+    id SERIAL PRIMARY KEY,
+    user1_id INTEGER NOT NULL REFERENCES users(id),
+    user2_id INTEGER NOT NULL REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE messages (
+    id SERIAL PRIMARY KEY,
+    conversation_id INTEGER NOT NULL REFERENCES conversations(id),
+    sender_id INTEGER NOT NULL REFERENCES users(id),
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_read BOOLEAN DEFAULT FALSE
+);
+
 INSERT INTO categories (name) VALUES
     ('Jedzenie'),
     ('Elektronika'),

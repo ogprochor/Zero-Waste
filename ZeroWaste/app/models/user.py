@@ -17,3 +17,5 @@ class User(Base):
     offers = relationship("Offer", back_populates="owner")
 
     avatar_url = Column(String(500), nullable=True)
+
+    sent_messages = relationship("Message", foreign_keys="Message.sender_id")
