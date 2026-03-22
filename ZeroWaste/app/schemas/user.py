@@ -11,6 +11,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: str = Field(min_length=8, max_length=72, description="Hasło (8-72 znaków)")
+    phone: Optional[str] = None
 
     @validator('username')
     def validate_username(cls, v):
@@ -38,6 +39,16 @@ class UserCreate(UserBase):
 
         if errors:
             raise ValueError("; ".join(errors))
+
+        return v
+
+    @validator('phone')
+    def validate_phone(cls, v):
+        if not v:
+            return v
+
+        if not re.match(r'^\+?[0-9]{7,15}$', v):
+            raise ValueError("Nieprawidłowy numer telefonu")
 
         return v
 
@@ -69,6 +80,16 @@ class UserUpdate(BaseModel):
 
         if errors:
             raise ValueError("; ".join(errors))
+
+        return v
+
+    @validator('phone')
+    def validate_phone(cls, v):
+        if not v:
+            return v
+
+        if not re.match(r'^\+?[0-9]{7,15}$', v):
+            raise ValueError("Nieprawidłowy numer telefonu")
 
         return v
 

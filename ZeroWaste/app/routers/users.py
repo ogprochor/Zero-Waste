@@ -212,3 +212,15 @@ def get_avatar(user_id: int, db: Session = Depends(get_db)):
         )
 
     return {"avatar_url": user.avatar_url}
+
+@router.get("/{user_id}/phone")
+def get_phone(user_id: int, db: Session = Depends(get_db)):
+    user = db.get(UserModel, user_id)
+
+    if user is None or not user.phone:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Phone not found"
+        )
+
+    return {"phone": user.phone}
