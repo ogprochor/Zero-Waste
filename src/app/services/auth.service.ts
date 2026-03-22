@@ -1,3 +1,4 @@
+// app/services/auth.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
@@ -7,6 +8,9 @@ export interface CurrentUser {
   id: number;
   username: string;
   email: string;
+  avatar_url?: string;
+  bio?: string;
+  phone?: string;
 }
 
 export interface LoginResponse {
@@ -19,7 +23,7 @@ export interface LoginResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private API_URL = 'http://127.0.0.1:8080';
+  private API_URL = 'http://127.0.0.1:8000';
   private logoutTimer: ReturnType<typeof setTimeout> | null = null;
 
   private currentUserSubject = new BehaviorSubject<CurrentUser | null>(
@@ -57,14 +61,32 @@ export class AuthService {
   fetchCurrentUser(): Observable<CurrentUser> {
     return this.http.get<CurrentUser>(`${this.API_URL}/auth/me`);
   }
-
+  
   updateUser(
     userId: number,
-    data: { username?: string; email?: string; password?: string }
+    data: { 
+      username?: string; 
+      email?: string; 
+      password?: string;
+      bio?: string;
+      phone?: string;
+    }
   ): Observable<CurrentUser> {
     return this.http.put<CurrentUser>(`${this.API_URL}/users/${userId}`, data).pipe(
       catchError((error) => {
         console.error('Błąd aktualizacji profilu:', error);
+        return throwError(() => error);
+      })
+    );
+  }
+
+  uploadAvatar(userId: number, file: File): Observable<CurrentUser> {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    return this.http.put<CurrentUser>(`${this.API_URL}/users/${userId}/avatar`, formData).pipe(
+      catchError((error) => {
+        console.error('Błąd uploadu avatara:', error);
         return throwError(() => error);
       })
     );

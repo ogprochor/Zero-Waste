@@ -1,4 +1,4 @@
-// app/shared/form-message/form-message.component.ts
+// app/shared/form-message/form-message.ts
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 

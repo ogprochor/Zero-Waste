@@ -1,0 +1,203 @@
+<div class="profile-container">
+  <div *ngIf="loading" class="loading-spinner">Ładowanie profilu...</div>
+
+  <div *ngIf="!loading">
+    <div class="profile-header">
+      <div class="avatar-section">
+        <ng-container *ngIf="!editMode">
+          <img *ngIf="user.avatar" [src]="user.avatar" alt="Avatar" class="avatar">
+          <span *ngIf="!user.avatar" class="avatar-placeholder">🌱</span>
+        </ng-container>
+        <ng-container *ngIf="editMode">
+          <img *ngIf="avatarPreview" [src]="avatarPreview" alt="Avatar" class="avatar">
+          <div *ngIf="!avatarPreview" class="avatar-placeholder">🌱</div>
+          <input type="file" (change)="onAvatarChange($event)" accept="image/*" class="avatar-input" />
+        </ng-container>
+      </div>
+
+      <div class="profile-info">
+        <div class="profile-info-header">
+          <div class="profile-name-section">
+            <h1>{{user.name}}</h1>
+            <div class="username">{{user.username}}</div>
+          </div>
+          <!-- Przycisk edytuj profil po prawej stronie -->
+          <button class="edit-profile-btn" (click)="toggleEdit()">
+            ✎ {{editMode ? 'Anuluj' : 'Edytuj profil'}}
+          </button>
+        </div>
+
+        <ng-container *ngIf="!editMode">
+          <p class="bio">{{user.bio || 'Brak opisu. Kliknij "Edytuj profil" aby dodać opis.'}}</p>
+          <div class="meta">
+            <span>📧 {{user.email}}</span>
+            <span *ngIf="user.location">📍 {{user.location}}</span>
+            <span>📅 Dołączyła: {{user.joinedDate}}</span>
+          </div>
+          <div class="counts">
+            <div (click)="switchTab('posty')">
+              <strong>{{user.postsCount}}</strong>
+              <span class="count-label">Posty</span>
+            </div>
+            <div (click)="switchTab('moje-ogloszenia')">
+              <strong>{{user.offersCount}}</strong>
+              <span class="count-label">Ogłoszenia</span>
+            </div>
+            <div (click)="switchTab('obserwujacy')">
+              <strong>{{user.followers.length}}</strong>
+              <span class="count-label">Obserwujący</span>
+            </div>
+            <div (click)="switchTab('obserwowani')">
+              <strong>{{user.following.length}}</strong>
+              <span class="count-label">Obserwuje</span>
+            </div>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="editMode">
+          <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="edit-form">
+            <input formControlName="name" placeholder="Imię i nazwisko" />
+            <input formControlName="username" placeholder="Nazwa użytkownika" />
+            <input formControlName="email" placeholder="Email" type="email" />
+            <input formControlName="phone" placeholder="Telefon (+48...)" />
+            <input formControlName="location" placeholder="Miasto, Kraj" />
+            <textarea formControlName="bio" placeholder="O sobie" rows="4"></textarea>
+            <div class="form-actions">
+              <button type="submit" [disabled]="profileForm.invalid || saving">
+                {{ saving ? 'Zapisywanie...' : 'Zapisz zmiany' }}
+              </button>
+            </div>
+          </form>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button [class.active]="activeTab==='posty'" (click)="switchTab('posty')">Posty</button>
+      <button [class.active]="activeTab==='moje-ogloszenia'" (click)="switchTab('moje-ogloszenia')">Moje ogłoszenia</button>
+      <button [class.active]="activeTab==='obserwujacy'" (click)="switchTab('obserwujacy')">Obserwujący</button>
+      <button [class.active]="activeTab==='obserwowani'" (click)="switchTab('obserwowani')">Obserwuje</button>
+    </div>
+
+    <!-- Tab: Posty -->
+    <div *ngIf="activeTab === 'posty'" class="tab-content">
+      <div class="add-post-section">
+        <button class="add-post-btn" (click)="addPost()" *ngIf="!addingPost">
+          ➕ Dodaj post
+        </button>
+        
+        <div *ngIf="addingPost" class="add-post-form">
+          <textarea 
+            [(ngModel)]="newPostContent" 
+            placeholder="Co nowego w Twoim zero waste życiu?"
+            rows="3"
+            class="post-textarea"
+          ></textarea>
+          <div class="add-post-actions">
+            <button (click)="submitPost()" [disabled]="!newPostContent.trim()" class="submit-post-btn">Opublikuj</button>
+            <button (click)="cancelAddPost()" class="cancel-post-btn">Anuluj</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="posts-grid">
+        <div *ngIf="user.posts.length === 0" class="empty-state">
+          <p>Brak postów. Dodaj pierwszy post!</p>
+        </div>
+        <div class="post-card" *ngFor="let post of user.posts">
+          <div class="post-header">
+            <div class="post-avatar">🌱</div>
+            <div>
+              <div class="post-meta-name">{{user.name}}</div>
+              <div class="post-meta-date">{{post.date | date:'dd MMMM yyyy'}}</div>
+            </div>
+          </div>
+          <div class="post-content">
+            <p>{{post.content}}</p>
+          </div>
+          <div class="post-footer">
+            <button class="post-action">♥ {{post.likes}} polubień</button>
+            <button class="post-action">💬 {{post.comments}} komentarzy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Moje ogłoszenia -->
+    <div *ngIf="activeTab === 'moje-ogloszenia'" class="tab-content">
+      <div *ngIf="offersLoading" class="loading-spinner">Ładowanie Twoich ofert...</div>
+
+      <div *ngIf="!offersLoading && user.offers.length === 0" class="empty-state">
+        <p>Nie masz jeszcze żadnych ogłoszeń.</p>
+        <a routerLink="/dodaj-oferte" class="btn-primary">Dodaj pierwsze ogłoszenie</a>
+      </div>
+
+      <div class="offers-grid" *ngIf="!offersLoading && user.offers.length > 0">
+        <div *ngFor="let offer of user.offers" class="offer-wrapper" (click)="goToOfferDetails(offer.id)">
+          <div class="offer-card">
+            <div class="offer-image" *ngIf="offer.image_url; else noImage">
+              <img [src]="offer.image_url" [alt]="offer.title">
+            </div>
+            <ng-template #noImage>
+              <div class="offer-image placeholder">📦</div>
+            </ng-template>
+            <div class="offer-content">
+              <h3>{{offer.title}}</h3>
+              <p class="offer-description">{{offer.description | slice:0:80}}...</p>
+              <div class="offer-meta">
+                <span *ngIf="offer.price !== null && offer.price !== undefined">
+                  💰 {{offer.price === 0 ? 'Za darmo' : offer.price + ' zł'}}
+                </span>
+                <span *ngIf="offer.location">📍 {{offer.location}}</span>
+                <span class="offer-category">🏷️ {{offer.category}}</span>
+              </div>
+            </div>
+            <button class="delete-action-btn" (click)="deleteOffer($event, offer.id)" title="Usuń ofertę">
+              🗑️
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Obserwujący -->
+    <div *ngIf="activeTab === 'obserwujacy'" class="tab-content">
+      <div class="people-list" *ngIf="user.followers.length > 0; else noFollowers">
+        <div class="person-row" *ngFor="let follower of user.followers">
+          <div class="person-avatar">🌻</div>
+          <div class="person-info">
+            <div class="person-name">{{follower.name}}</div>
+            <div class="person-username">{{follower.username}}</div>
+            <div class="person-bio">{{follower.bio}}</div>
+          </div>
+          <button class="follow-btn following">Obserwujesz</button>
+        </div>
+      </div>
+      <ng-template #noFollowers>
+        <div class="empty-state">
+          <p>Brak obserwujących.</p>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- Tab: Obserwuje -->
+    <div *ngIf="activeTab === 'obserwowani'" class="tab-content">
+      <div class="people-list" *ngIf="user.following.length > 0; else noFollowing">
+        <div class="person-row" *ngFor="let follow of user.following">
+          <div class="person-avatar">🌻</div>
+          <div class="person-info">
+            <div class="person-name">{{follow.name}}</div>
+            <div class="person-username">{{follow.username}}</div>
+            <div class="person-bio">{{follow.bio}}</div>
+          </div>
+          <button class="follow-btn following">Obserwujesz</button>
+        </div>
+      </div>
+      <ng-template #noFollowing>
+        <div class="empty-state">
+          <p>Nie obserwujesz jeszcze nikogo.</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

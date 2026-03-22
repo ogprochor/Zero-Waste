@@ -5,22 +5,18 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <div class="form-group">
         <label for="username">Nazwa użytkownika</label>
-        <input id="username" type="text" formControlName="username" />
-
+        <input id="username" type="text" formControlName="username" placeholder="Wpisz nazwę użytkownika" />
         <div class="error" *ngIf="username?.touched && username?.invalid">
           <small *ngIf="username?.errors?.['required']">Nazwa użytkownika jest wymagana.</small>
           <small *ngIf="username?.errors?.['minlength']">Nazwa musi mieć co najmniej 3 znaki.</small>
           <small *ngIf="username?.errors?.['maxlength']">Nazwa może mieć maksymalnie 30 znaków.</small>
-          <small *ngIf="username?.errors?.['pattern']">
-            Dozwolone są litery, cyfry i podkreślenie.
-          </small>
+          <small *ngIf="username?.errors?.['pattern']">Dozwolone są litery, cyfry i podkreślenie.</small>
         </div>
       </div>
 
       <div class="form-group">
         <label for="email">Email</label>
-        <input id="email" type="email" formControlName="email" />
-
+        <input id="email" type="email" formControlName="email" placeholder="Wpisz email" />
         <div class="error" *ngIf="email?.touched && email?.invalid">
           <small *ngIf="email?.errors?.['required']">Email jest wymagany.</small>
           <small *ngIf="email?.errors?.['email']">Podaj poprawny adres email.</small>
@@ -29,22 +25,16 @@
 
       <div class="form-group">
         <label for="password">Nowe hasło (opcjonalnie)</label>
-        <input id="password" type="password" formControlName="password" />
-
+        <input id="password" type="password" formControlName="password" placeholder="Wpisz nowe hasło" />
         <div class="error" *ngIf="password?.touched && password?.invalid">
-          <small *ngIf="password?.errors?.['minlength']">
-            Hasło musi mieć co najmniej 8 znaków.
-          </small>
-          <small *ngIf="password?.errors?.['pattern']">
-            Hasło musi zawierać co najmniej 1 wielką literę i 1 znak specjalny.
-          </small>
+          <small *ngIf="password?.errors?.['minlength']">Hasło musi mieć co najmniej 8 znaków.</small>
+          <small *ngIf="password?.errors?.['pattern']">Hasło musi zawierać co najmniej 1 wielką literę i 1 znak specjalny.</small>
         </div>
       </div>
 
       <div class="form-group">
         <label for="confirmPassword">Powtórz nowe hasło</label>
-        <input id="confirmPassword" type="password" formControlName="confirmPassword" />
-
+        <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="Powtórz hasło" />
         <div class="error" *ngIf="form.touched && form.errors?.['passwordMismatch']">
           <small>Hasła nie są takie same.</small>
         </div>
@@ -53,7 +43,7 @@
       <div class="message error" *ngIf="errorMessage">
         {{ errorMessage }}
       </div>
-
+      
       <div class="message success" *ngIf="successMessage">
         {{ successMessage }}
       </div>
@@ -62,10 +52,7 @@
         <button type="submit" [disabled]="isSubmitting">
           {{ isSubmitting ? 'Zapisywanie...' : 'Zapisz zmiany' }}
         </button>
-
-        <button type="button" class="secondary" (click)="onCancel()">
-          Anuluj
-        </button>
+        <button type="button" class="secondary" (click)="onCancel()">Anuluj</button>
       </div>
     </form>
   </div>

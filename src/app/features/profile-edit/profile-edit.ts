@@ -63,7 +63,9 @@ export class ProfileEditComponent implements OnInit {
             Validators.pattern(/^(?=.*[A-Z])(?=.*[\W_]).+$/)
           ]
         ],
-        confirmPassword: ['']
+        confirmPassword: [''],
+        bio: [''],
+        phone: ['']
       },
       { validators: passwordMatchValidator }
     );
@@ -84,7 +86,9 @@ export class ProfileEditComponent implements OnInit {
 
           this.form.patchValue({
             username: user.username,
-            email: user.email
+            email: user.email,
+            bio: user.bio ?? '',
+            phone: user.phone ?? ''
           });
         },
         error: () => {
@@ -129,9 +133,11 @@ export class ProfileEditComponent implements OnInit {
 
     const formValue = this.form.value;
 
-    const payload: { username?: string; email?: string; password?: string } = {
+    const payload: any = {
       username: formValue.username,
-      email: formValue.email
+      email: formValue.email,
+      bio: formValue.bio,
+      phone: formValue.phone
     };
 
     if (formValue.password && formValue.password.trim() !== '') {

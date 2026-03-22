@@ -43,7 +43,7 @@ export interface UploadImageResponse {
   providedIn: 'root'
 })
 export class OfferService {
-  private API_URL = 'http://127.0.0.1:8080';
+  private API_URL = 'http://127.0.0.1:8000';
   private offersUrl = `${this.API_URL}/offers/`;
 
   constructor(private http: HttpClient) {}
