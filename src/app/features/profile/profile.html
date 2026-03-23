@@ -21,10 +21,14 @@
             <h1>{{user.name}}</h1>
             <div class="username">{{user.username}}</div>
           </div>
-          <!-- Przycisk edytuj profil po prawej stronie -->
-          <button class="edit-profile-btn" (click)="toggleEdit()">
-            ✎ {{editMode ? 'Anuluj' : 'Edytuj profil'}}
-          </button>
+          <div class="profile-actions">
+            <button class="edit-profile-btn" (click)="toggleEdit()">
+              ✎ {{editMode ? 'Anuluj' : 'Edytuj profil'}}
+            </button>
+            <button class="change-password-btn" (click)="goToChangePassword()">
+              🔒 Zmień hasło
+            </button>
+          </div>
         </div>
 
         <ng-container *ngIf="!editMode">

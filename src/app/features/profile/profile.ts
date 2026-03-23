@@ -316,4 +316,7 @@ export class ProfileComponent implements OnInit {
       });
     }
   }
+  goToChangePassword(): void {
+    this.router.navigate(['/profil/edytuj']);
+  }
 }
