@@ -42,13 +42,13 @@ class UserCreate(UserBase):
 
         return v
 
-    @validator('phone')
+    @validator("phone")
     def validate_phone(cls, v):
-        if not v:
+        if v is None:
             return v
 
-        if not re.match(r'^\+?[0-9]{7,15}$', v):
-            raise ValueError("Nieprawidłowy numer telefonu")
+        if not re.fullmatch(r"\+?\d{7,15}", v):
+            raise ValueError("Invalid phone number")
 
         return v
 
