@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Text
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
@@ -15,5 +15,6 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     offers = relationship("Offer", back_populates="owner")
+    bio = Column(Text, nullable=True)
     phone = Column(String(50), nullable=True)
     avatar_url = Column(String(500), nullable=True)
