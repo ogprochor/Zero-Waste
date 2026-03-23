@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgIf, CommonModule } from '@angular/common';
 import { RouterLink, ActivatedRoute, Router } from '@angular/router';
 import { OfferService, Offer } from '../../services/offer.service';
+import { ChatUiService } from '../../services/chat-ui.service';
 
 @Component({
   selector: 'app-offer-details',
@@ -31,7 +32,7 @@ import { OfferService, Offer } from '../../services/offer.service';
           </div>
 
           <span class="location-badge" *ngIf="offer.location">📍 {{ offer.location }}</span>
-          <h2>{{ offer.title }}</h2>  <!-- POPRAWIONE -->
+          <h2>{{ offer.title }}</h2>
           <p class="description">{{ offer.description }}</p>
 
           <p *ngIf="offer.price != null" class="description">
@@ -39,6 +40,10 @@ import { OfferService, Offer } from '../../services/offer.service';
           </p>
 
           <div class="actions">
+            <button *ngIf="!isOwner" (click)="onOpenChat()" class="btn-chat">
+              <span class="icon">✉️</span> Napisz wiadomość
+            </button>
+
             <button routerLink="/" class="btn-secondary">
               <span class="icon">←</span> Powrót do strony głównej
             </button>
@@ -53,8 +58,8 @@ import { OfferService, Offer } from '../../services/offer.service';
         <div class="modal-card">
           <h3>Potwierdź usunięcie</h3>
           <p>
-            Czy na pewno chcesz trwale usunąć ofertę:
-            <strong>{{ offer.title }}</strong>?  <!-- POPRAWIONE -->
+            Czy na pewno chcesz trwale usunąć ofertę: 
+            <strong>{{ offer.title }}</strong>?
           </p>
           <div class="modal-buttons">
             <button class="btn-cancel" (click)="showDeleteModal = false" [disabled]="deleting">
@@ -79,19 +84,18 @@ import { OfferService, Offer } from '../../services/offer.service';
 export class OfferDetailsComponent implements OnInit {
   id: string | null;
   offer: Offer | null = null;
-
   isOwner = false;
   showDeleteModal = false;
   deleting = false;
   error: string | null = null;
   flashMsg: string | null = null;
-
-  private readonly API_URL = 'http://127.0.0.1:8080';
+  private readonly API_URL = 'http://127.0.0.1:8000';
 
   constructor(
     private route: ActivatedRoute,
     private offerService: OfferService,
-    private router: Router
+    private router: Router,
+    private chatService: ChatUiService
   ) {
     this.id = this.route.snapshot.paramMap.get('id');
   }
@@ -115,23 +119,23 @@ export class OfferDetailsComponent implements OnInit {
     }
   }
 
+  onOpenChat(): void {
+    if (this.offer) {
+      const name = this.offer.title || 'Sprzedawca';
+      const ownerId = Number(this.offer.owner_id);
+      this.chatService.openChat(name, ownerId);
+    }
+  }
+
   getImageUrl(): string | null {
     const imageUrl = this.offer?.image_url ?? null;
-
-    if (!imageUrl) {
-      return null;
-    }
-
-    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
-      return imageUrl;
-    }
-
+    if (!imageUrl) return null;
+    if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl;
     return `${this.API_URL}${imageUrl}`;
   }
 
   checkOwnership(): void {
     const storedUser = localStorage.getItem('currentUser');
-
     if (this.offer && storedUser) {
       const currentUser = JSON.parse(storedUser);
       this.isOwner = Number(this.offer.owner_id) === Number(currentUser.id);
@@ -140,27 +144,23 @@ export class OfferDetailsComponent implements OnInit {
     }
   }
 
-  confirmDelete(): void {
-    this.showDeleteModal = true;
+  confirmDelete(): void { 
+    this.showDeleteModal = true; 
   }
 
-  onEdit(): void {
-    this.router.navigate(['/offers', this.id, 'edit']);
+  onEdit(): void { 
+    this.router.navigate(['/offers', this.id, 'edit']); 
   }
 
   deleteOffer(): void {
     if (this.id && this.offer) {
       this.deleting = true;
-
       this.offerService.deleteOffer(Number(this.id)).subscribe({
         next: () => {
           this.showDeleteModal = false;
-          this.router.navigate(['/'], {
-            queryParams: { msg: 'Oferta została usunięta.' }
-          });
+          this.router.navigate(['/'], { queryParams: { msg: 'Oferta została usunięta.' } });
         },
         error: (err: any) => {
-          console.error('Błąd podczas usuwania oferty:', err);
           this.error = 'Nie udało się usunąć oferty.';
           this.deleting = false;
           this.showDeleteModal = false;
