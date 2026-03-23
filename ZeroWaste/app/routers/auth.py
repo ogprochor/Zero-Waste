@@ -42,6 +42,7 @@ def register_user(user_data: UserCreate, db: Session = Depends(get_db)):
     new_user = UserModel(
         username=user_data.username,
         email=user_data.email,
+        phone=user_data.phone,
         hashed_password=hash_password(user_data.password)
     )
 

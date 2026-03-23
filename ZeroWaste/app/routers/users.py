@@ -10,6 +10,7 @@ from ZeroWaste.app.models.user import User as UserModel
 from ZeroWaste.app.schemas.user import User, UserUpdate
 from ZeroWaste.app.core.security import hash_password
 from ZeroWaste.app.core.deps import get_current_user
+from pydantic import BaseModel
 
 AVATAR_DIR = Path("ZeroWaste/app/static/avatars")
 ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
@@ -212,3 +213,40 @@ def get_avatar(user_id: int, db: Session = Depends(get_db)):
         )
 
     return {"avatar_url": user.avatar_url}
+
+@router.get("/{user_id}/phone_number")
+def get_phone(user_id: int, db: Session = Depends(get_db)):
+    user = db.get(UserModel, user_id)
+
+    if user is None:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    if not user.phone:
+        raise HTTPException(
+            status_code=404,
+            detail="Phone not found"
+        )
+
+    return {"phone_number": user.phone}
+
+
+class UpdatePhoneRequest(BaseModel):
+    phone: str
+@router.patch("/users/{user_id}/phone")
+def update_phone(user_id: int, data: UpdatePhoneRequest, db: Session = Depends(get_db)):
+    user = db.get(UserModel, user_id)
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+
+    user.phone = data.phone
+    db.commit()
+    db.refresh(user)
+
+    return {"phone": user.phone}
