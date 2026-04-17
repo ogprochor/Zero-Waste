@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status
 from sqlalchemy.orm import Session
 from typing import List
-
 from pathlib import Path
 import shutil
 
@@ -24,6 +23,34 @@ router = APIRouter(
 @router.get("/", response_model=List[User])
 def get_users(db: Session = Depends(get_db)):
     return db.query(UserModel).all()
+
+
+@router.get("/search")
+def search_users(query: str, db: Session = Depends(get_db)):
+    query = query.strip()
+
+    if len(query) < 2:
+        return []
+
+    users = (
+        db.query(UserModel)
+        .filter(UserModel.username.ilike(f"%{query}%"))
+        .order_by(UserModel.username.asc())
+        .limit(10)
+        .all()
+    )
+
+    return [
+        {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "avatar_url": user.avatar_url,
+            "bio": user.bio,
+            "phone": user.phone,
+        }
+        for user in users
+    ]
 
 
 @router.get("/{user_id}", response_model=User)
@@ -214,6 +241,7 @@ def get_avatar(user_id: int, db: Session = Depends(get_db)):
 
     return {"avatar_url": user.avatar_url}
 
+
 @router.get("/{user_id}/phone_number")
 def get_phone(user_id: int, db: Session = Depends(get_db)):
     user = db.get(UserModel, user_id)
@@ -235,7 +263,9 @@ def get_phone(user_id: int, db: Session = Depends(get_db)):
 
 class UpdatePhoneRequest(BaseModel):
     phone: str
-@router.patch("/users/{user_id}/phone")
+
+
+@router.patch("/{user_id}/phone")
 def update_phone(user_id: int, data: UpdatePhoneRequest, db: Session = Depends(get_db)):
     user = db.get(UserModel, user_id)
 
