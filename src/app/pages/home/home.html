@@ -1,0 +1,40 @@
+<section class="hero">
+  <div class="hero__inner">
+    <div class="hero__badge">Platforma Zero Waste</div>
+    <p class="hero__eyebrow">Razem możemy zmienić świat</p>
+
+    <h2 class="hero__title">
+      Dołącz do społeczności, która ratuje jedzenie, wspiera lokalny biznes
+      i redukuje odpady.
+    </h2>
+
+    <p class="hero__lead">
+      Każde działanie ma znaczenie – wymieniaj, oddawaj, odbieraj i twórz
+      ekologiczne nawyki.
+    </p>
+
+    <div class="hero__actions">
+      <a class="btn-secondary hero__btn">
+        Poznaj funkcje
+      </a>
+
+      <a routerLink="/offers/1" class="btn-primary hero__btn offer-link">
+        Szczegóły przykładowej oferty →
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="preview-list">
+  <h3>Ostatnio dodane przedmioty</h3>
+
+  <div class="preview-grid">
+    <a *ngFor="let it of items" 
+       [routerLink]="['/offers', it.id]" 
+       class="offer-tile-link">
+      <app-list-item [item]="it"></app-list-item>
+    </a>
+  </div>
+
+  <a routerLink="/lista" class="see-all">Zobacz całą listę →</a>
+</section>

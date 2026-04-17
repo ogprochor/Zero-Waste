@@ -1,0 +1,54 @@
+<section class="edit-offer">
+  <div class="header">
+    <h2>Edytuj ofertę</h2>
+    <a class="back" [routerLink]="['/offers', offerId]">← Wróć do szczegółów</a>
+  </div>
+
+  <p *ngIf="loading" class="info">Ładowanie...</p>
+
+  <div *ngIf="!loading">
+    <p *ngIf="error" class="msg msg--error">{{ error }}</p>
+    <p *ngIf="success" class="msg msg--success">{{ success }}</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="form" *ngIf="!error">
+      <label>
+        <span>Tytuł*</span>
+        <input type="text" formControlName="title" />
+      </label>
+
+      <label>
+        <span>Opis</span>
+        <textarea rows="4" formControlName="description"></textarea>
+      </label>
+
+      <label>
+        <span>Cena</span>
+        <input type="number" formControlName="price" />
+      </label>
+
+      <label>
+        <span>Lokalizacja</span>
+        <input type="text" formControlName="location" />
+      </label>
+
+      <label>
+        <span>Kategoria*</span>
+        <select formControlName="category_id">
+          <option [ngValue]="null">Wybierz...</option>
+          <option *ngFor="let c of categories" [value]="c.id">{{ c.name }}</option>
+        </select>
+      </label>
+
+      <label>
+        <span>URL obrazka</span>
+        <input type="text" formControlName="image_url" />
+      </label>
+
+      <div class="actions">
+        <button type="submit" [disabled]="submitting">
+          {{ submitting ? 'Zapisywanie...' : 'Zapisz zmiany' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</section>

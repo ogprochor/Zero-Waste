@@ -1,0 +1,33 @@
+<div class="public-profile-container">
+  <a routerLink="/" class="back-link">← Wróć</a>
+
+  <div *ngIf="loading" class="info-card">
+    Ładowanie profilu...
+  </div>
+
+  <div *ngIf="error && !loading" class="info-card error">
+    {{ error }}
+  </div>
+
+  <div *ngIf="user && !loading" class="profile-card">
+    <div class="avatar-wrapper">
+      <img *ngIf="avatarUrl; else noAvatar" [src]="avatarUrl" [alt]="user.username" class="avatar" />
+      <ng-template #noAvatar>
+        <div class="avatar placeholder">👤</div>
+      </ng-template>
+    </div>
+
+    <h1>{{ user.username }}</h1>
+    <p class="email">{{ user.email }}</p>
+
+    <div class="section" *ngIf="user.bio">
+      <h3>Bio</h3>
+      <p>{{ user.bio }}</p>
+    </div>
+
+    <div class="section" *ngIf="user.phone">
+      <h3>Telefon</h3>
+      <p>{{ user.phone }}</p>
+    </div>
+  </div>
+</div>

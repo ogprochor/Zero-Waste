@@ -1,0 +1,57 @@
+.public-profile-container {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  text-decoration: none;
+  color: #0f7c3a;
+  font-weight: 600;
+}
+
+.profile-card,
+.info-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.error {
+  color: #b42318;
+}
+
+.avatar-wrapper {
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.placeholder {
+  background: #eef3ef;
+  display: grid;
+  place-items: center;
+  font-size: 42px;
+}
+
+h1 {
+  margin: 0 0 8px;
+}
+
+.email {
+  color: #667085;
+  margin-bottom: 20px;
+}
+
+.section {
+  margin-top: 20px;
+}

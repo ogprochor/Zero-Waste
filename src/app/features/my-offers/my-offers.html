@@ -1,0 +1,19 @@
+<div class="my-offers-container">
+  <h2>Moje ogłoszenia</h2>
+
+  <div *ngIf="loading" class="loader">Ładowanie Twoich ofert...</div>
+
+  <div *ngIf="!loading && items.length === 0" class="empty-state">
+    <p>Nie masz jeszcze żadnych ogłoszeń.</p>
+    <a routerLink="/dodaj-oferte" class="btn-primary">Dodaj pierwsze ogłoszenie</a>
+  </div>
+
+  <div class="offers-grid" *ngIf="!loading && items.length > 0">
+    <div *ngFor="let item of items" class="offer-wrapper">
+      <app-list-item [item]="item" (click)="goToDetails(item.id)"></app-list-item>
+      <button class="delete-action-btn" (click)="deleteOffer($event, item.id)" title="Usuń ofertę">
+        🗑️
+      </button>
+    </div>
+  </div>
+</div>
