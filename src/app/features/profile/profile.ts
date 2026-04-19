@@ -9,6 +9,7 @@ import { OfferService } from '../../services/offer.service';
 import { CategoryService } from '../../services/category.service';
 import { NotificationService } from '../../services/notification.service'; 
 import { FormsModule } from '@angular/forms';
+import { PostService } from '../../services/post.service';
 
 export interface ProfileUser {
   id: number;
@@ -56,12 +57,14 @@ export class ProfileComponent implements OnInit {
     private offerService: OfferService,
     private categoryService: CategoryService, 
     private notificationService: NotificationService, 
-    private router: Router 
+    private router: Router,
+    private postService: PostService
   ) {}
 
   ngOnInit(): void {
     this.loadUserProfile();
     this.loadCategoriesAndOffers();
+    this.loadPosts();
   }
 
   loadUserProfile(): void {
@@ -214,7 +217,6 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  // NOWA METODA: pobiera świeże dane użytkownika z backendu
   private refreshUserData(): void {
     this.authService.fetchCurrentUser().subscribe({
       next: (freshUser) => {
@@ -229,9 +231,7 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  // NOWA METODA: aktualizuje lokalne dane na podstawie świeżych z backendu
   private updateLocalUserWithFreshData(freshUser: CurrentUser): void {
-    // Aktualizuj dane w localStorage
     this.authService.setCurrentUser(freshUser);
     
     const newAvatarUrl = freshUser.avatar_url ? `${this.authService['API_URL']}${freshUser.avatar_url}` : '';
@@ -275,25 +275,40 @@ export class ProfileComponent implements OnInit {
   }
 
   submitPost(): void {
-    if (this.newPostContent.trim()) {
-      const newPost = {
-        id: Date.now(),
-        content: this.newPostContent,
-        date: new Date(),
-        likes: 0,
-        comments: 0
-      };
-      this.user.posts.unshift(newPost);
-      this.user.postsCount = this.user.posts.length;
-      this.newPostContent = '';
-      this.addingPost = false;
-      this.notificationService.success('Post został dodany!');
-    }
+    if (!this.newPostContent.trim()) return;
+
+    this.postService.createPost({
+      content: this.newPostContent
+    }).subscribe({
+      next: (post) => {
+        this.user.posts.unshift(post);
+        this.user.postsCount = this.user.posts.length;
+        this.newPostContent = '';
+        this.addingPost = false;
+        this.notificationService.success('Post dodany!');
+      },
+      error: (err) => {
+        console.error(err);
+        this.notificationService.error('Błąd dodawania posta');
+      }
+    });
   }
 
   cancelAddPost(): void {
     this.addingPost = false;
     this.newPostContent = '';
+  }
+
+  loadPosts(): void {
+    this.postService.getMyPosts().subscribe({
+      next: (posts) => {
+        this.user.posts = posts;
+        this.user.postsCount = posts.length;
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
   }
 
   goToOfferDetails(id: number): void {

@@ -35,7 +35,8 @@ export const routes: Routes = [
       { path: 'profil/edytuj', component: ProfileEditComponent, canActivate: [authGuard] },
       { path: 'profil', component: ProfileComponent, canActivate: [authGuard] },
       { path: 'profil/:id', component: PublicProfileComponent },
-      { path: 'my-offers', component: MyOffersComponent, canActivate: [authGuard] }
+      { path: 'my-offers', component: MyOffersComponent, canActivate: [authGuard] },
+      { path: 'blog', loadComponent: () => import('./features/blog/blog').then(m => m.BlogComponent)}
     ],
   },
 

@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog – ZeroWaste.pl</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --soil: #2C1A0E;
+    --moss: #4A5C3A;
+    --sage: #7A9468;
+    --fern: #A8BF9A;
+    --linen: #F0EBE0;
+    --cream: #FAF7F2;
+    --bark: #8B6F4E;
+    --clay: #C4956A;
+    --leaf: #5E7A4A;
+    --mist: #D4DDD0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--cream);
+    color: var(--soil);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    min-height: 100vh;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(ellipse 60% 40% at 85% 5%, rgba(74,92,58,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 50% at 5% 85%, rgba(168,191,154,0.09) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ========== FORMULARZ DODAWANIA ========== */
+  .add-post-section {
+    background: white;
+    border: 2px solid var(--mist);
+    border-radius: 24px;
+    padding: 28px;
+    margin-bottom: 48px;
+    animation: fadeUp 0.5s ease both;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  }
+
+  .add-post-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--sage);
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  .add-post-section textarea {
+    width: 100%;
+    padding: 16px 18px;
+    border: 2px solid var(--mist);
+    border-radius: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+    background: var(--cream);
+    transition: all 0.2s;
+    resize: vertical;
+    font-weight: 400;
+  }
+
+  .add-post-section textarea:focus {
+    outline: none;
+    border-color: var(--sage);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(122,148,104,0.1);
+  }
+
+  /* ===== PRZYCISK OPUBLIKUJ – Z OBRAMOWANIEM I KOLOROWYM NAPISEM ===== */
+  .publish-btn {
+    margin-top: 20px;
+    background: transparent;
+    color: var(--moss);
+    border: 2px solid var(--moss);
+    padding: 12px 28px;
+    border-radius: 40px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .publish-btn:hover:not(:disabled) {
+    background: var(--moss);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(74,92,58,0.2);
+  }
+
+  .publish-btn:active:not(:disabled) {
+    transform: translateY(0);
+  }
+
+  .publish-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* ========== NAGŁÓWEK LISTY POSTÓW ========== */
+  .posts-header {
+    margin-bottom: 28px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--mist);
+  }
+
+  .posts-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: var(--soil);
+  }
+
+  .posts-header span {
+    font-size: 0.85rem;
+    color: var(--sage);
+    margin-left: 10px;
+    font-weight: 400;
+  }
+
+  /* ========== KARTA POSTA – WSZYSTKIE JEDNAKOWE ========== */
+  .post-card {
+    background: white;
+    border: 2px solid var(--mist);
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    transition: all 0.25s ease;
+  }
+
+  .post-card:hover {
+    border-color: var(--sage);
+    box-shadow: 0 8px 20px rgba(74,92,58,0.12);
+    transform: translateY(-2px);
+  }
+
+  /* NAGŁÓWEK POSTA */
+  .post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .post-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--fern), var(--moss));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+    font-weight: 500;
+  }
+
+  .author-info .name {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--soil);
+    margin-bottom: 4px;
+  }
+
+  .author-info .date {
+    font-size: 0.7rem;
+    color: var(--bark);
+    opacity: 0.65;
+  }
+
+  /* ===== PRZYCISKI EDYTUJ / USUŃ ===== */
+  .post-actions {
+    display: flex;
+    gap: 12px;
+  }
+
+  .edit-btn, .delete-btn {
+    background: transparent;
+    border: 2px solid;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px 16px;
+    border-radius: 40px;
+    transition: all 0.2s ease;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .edit-btn {
+    color: var(--moss);
+    border-color: var(--moss);
+    background: transparent;
+  }
+
+  .edit-btn:hover {
+    background: var(--moss);
+    color: white;
+  }
+
+  .delete-btn {
+    color: #c44;
+    border-color: #c44;
+    background: transparent;
+  }
+
+  .delete-btn:hover {
+    background: #c44;
+    color: white;
+  }
+
+  /* TREŚĆ POSTA */
+  .post-content {
+    font-size: 1rem;
+    line-height: 1.65;
+    color: var(--bark);
+    margin: 20px 0 18px;
+    white-space: pre-wrap;
+    font-weight: 400;
+  }
+
+  /* TRYB EDYCJI */
+  .edit-textarea {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid var(--sage);
+    border-radius: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    margin: 16px 0;
+    resize: vertical;
+    background: var(--cream);
+  }
+
+  /* ===== PRZYCISKI ZAPISZ / ANULUJ – Z OBRAMOWANIEM ===== */
+  .save-btn, .cancel-btn {
+    padding: 8px 24px;
+    border-radius: 40px;
+    border: 2px solid;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 12px;
+    transition: all 0.2s;
+    background: transparent;
+  }
+
+  .save-btn {
+    color: var(--moss);
+    border-color: var(--moss);
+  }
+
+  .save-btn:hover {
+    background: var(--moss);
+    color: white;
+  }
+
+  .cancel-btn {
+    color: var(--bark);
+    border-color: var(--mist);
+  }
+
+  .cancel-btn:hover {
+    background: var(--linen);
+    color: var(--soil);
+  }
+
+  /* STOPKA POSTA */
+  .post-footer {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--linen);
+    display: flex;
+    gap: 28px;
+  }
+
+  .post-footer button {
+    background: transparent;
+    border: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--bark);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    transition: color 0.2s;
+    padding: 6px 12px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .post-footer button:hover {
+    background: var(--linen);
+    color: var(--moss);
+  }
+
+  .like-btn.liked {
+    color: #c44;
+  }
+
+  /* ŁADOWANIE / PUSTY STAN */
+  .loading, .empty-state {
+    text-align: center;
+    padding: 60px 24px;
+    color: var(--bark);
+    background: white;
+    border-radius: 24px;
+    border: 2px solid var(--mist);
+    font-weight: 400;
+  }
+
+  .empty-state {
+    font-size: 0.95rem;
+    color: var(--sage);
+  }
+
+  /* STOPKA STRONY */
+  .page-footer {
+    margin-top: 60px;
+    padding-top: 28px;
+    border-top: 1px solid var(--mist);
+    text-align: center;
+  }
+
+  .footer-copy {
+    font-size: 0.72rem;
+    color: var(--bark);
+    opacity: 0.5;
+  }
+
+  @media (max-width: 600px) {
+    .page { padding: 32px 20px; }
+    .add-post-section { padding: 20px; }
+    .post-card { padding: 20px; }
+    .post-header { flex-direction: column; }
+    .post-actions { align-self: flex-end; }
+    .posts-header h2 { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- FORMULARZ DODAWANIA POSTA -->
+  <div class="add-post-section">
+    <div class="add-post-label">Dodaj nowy wpis</div>
+    <textarea
+      [(ngModel)]="newPostContent"
+      placeholder="Podziel się swoją historią, przepisem lub poradą zero waste..."
+      rows="3"
+    ></textarea>
+    <button
+      class="publish-btn"
+      (click)="addPost()"
+      [disabled]="!newPostContent.trim() || addingPost"
+    >
+      Opublikuj
+    </button>
+  </div>
+
+  <!-- LISTA POSTÓW -->
+  <div class="posts-header" *ngIf="!loading">
+    <h2>Wszystkie wpisy <span *ngIf="posts.length">({{ posts.length }})</span></h2>
+  </div>
+
+  <div *ngIf="!loading">
+    <!-- WSZYSTKIE POSTY – TERAZ JEDNAKOWE -->
+    <div class="post-card" *ngFor="let post of posts">
+      <div class="post-header">
+        <div class="post-author">
+          <div class="avatar">🌱</div>
+          <div class="author-info">
+            <div class="name">{{ getUserName(post.user_id) }}</div>
+            <div class="date">{{ post.created_at | date:'dd MMMM yyyy, HH:mm' }}</div>
+          </div>
+        </div>
+
+        <div class="post-actions" *ngIf="canEditPost(post)">
+          <button class="edit-btn" (click)="startEdit(post)" *ngIf="editingPostId !== post.id">Edytuj</button>
+          <button class="delete-btn" (click)="deletePost(post.id!)">Usuń</button>
+        </div>
+      </div>
+
+      <div class="post-content" *ngIf="editingPostId !== post.id">
+        {{ post.content }}
+      </div>
+
+      <div *ngIf="editingPostId === post.id">
+        <textarea
+          class="edit-textarea"
+          [(ngModel)]="editContent"
+          rows="4"
+        ></textarea>
+        <div>
+          <button class="save-btn" (click)="saveEdit(post.id!)">Zapisz</button>
+          <button class="cancel-btn" (click)="cancelEdit()">Anuluj</button>
+        </div>
+      </div>
+
+      <div class="post-footer">
+        <button class="like-btn" [class.liked]="post.liked === true" (click)="toggleLike(post)">
+          ❤️ {{ post.likes || 0 }} polubień
+        </button>
+        <button>💬 {{ post.comments || 0 }} komentarzy</button>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="posts.length === 0">
+      Brak postów. Napisz coś jako pierwszy/a!
+    </div>
+  </div>
+
+  <div class="loading" *ngIf="loading">
+    Ładowanie wpisów...
+  </div>
+
+  <div class="page-footer">
+    <div class="footer-copy">© 2026 ZeroWaste.pl – społeczność bez odpadów</div>
+  </div>
+
+</div>
+
+</body>
+</html>
