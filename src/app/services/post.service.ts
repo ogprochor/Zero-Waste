@@ -38,7 +38,6 @@ export class PostService {
     });
   }
 
-  // POPRAWNIEJSZA METODA createPost
   createPost(post: { content: string }): Observable<Post> {
     return this.http.post<Post>(this.API_URL, { content: post.content }, {
       headers: this.getAuthHeaders()
@@ -47,6 +46,10 @@ export class PostService {
 
   getAllPosts(): Observable<Post[]> {
     return this.http.get<Post[]>(`${this.API_URL}/`);
+  }
+
+  getUserPosts(userId: number): Observable<Post[]> {
+    return this.http.get<Post[]>(`${this.API_URL}/user/${userId}`);
   }
 
   updatePost(id: number, content: string): Observable<Post> {

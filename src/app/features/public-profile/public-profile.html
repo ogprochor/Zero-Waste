@@ -1,33 +1,152 @@
-<div class="public-profile-container">
-  <a routerLink="/" class="back-link">← Wróć</a>
+<div class="profile-container">
+  <div *ngIf="loading" class="loading-spinner">Ładowanie profilu...</div>
 
-  <div *ngIf="loading" class="info-card">
-    Ładowanie profilu...
-  </div>
+  <div *ngIf="!loading">
+    <div class="profile-header">
+      <div class="avatar-section">
+        <img *ngIf="user.avatar" [src]="user.avatar" alt="Avatar" class="avatar">
+        <span *ngIf="!user.avatar" class="avatar-placeholder">🌱</span>
+      </div>
 
-  <div *ngIf="error && !loading" class="info-card error">
-    {{ error }}
-  </div>
+      <div class="profile-info">
+        <div class="profile-info-header">
+          <div class="profile-name-section">
+            <h1>{{user.name}}</h1>
+            <div class="username">{{user.username}}</div>
+          </div>
+          <!-- BRAK PRZYCISKÓW EDYCJI -->
+        </div>
 
-  <div *ngIf="user && !loading" class="profile-card">
-    <div class="avatar-wrapper">
-      <img *ngIf="avatarUrl; else noAvatar" [src]="avatarUrl" [alt]="user.username" class="avatar" />
-      <ng-template #noAvatar>
-        <div class="avatar placeholder">👤</div>
+        <p class="bio">{{user.bio || 'Brak opisu.'}}</p>
+        <div class="meta">
+          <span>📧 {{user.email}}</span>
+          <span *ngIf="user.location">📍 {{user.location}}</span>
+          <span>📅 Dołączył/a: {{user.joinedDate}}</span>
+        </div>
+        <div class="counts">
+          <div (click)="switchTab('posty')">
+            <strong>{{user.postsCount}}</strong>
+            <span class="count-label">Posty</span>
+          </div>
+          <div (click)="switchTab('moje-ogloszenia')">
+            <strong>{{user.offersCount}}</strong>
+            <span class="count-label">Ogłoszenia</span>
+          </div>
+          <div (click)="switchTab('obserwujacy')">
+            <strong>{{user.followers?.length || 0}}</strong>
+            <span class="count-label">Obserwujący</span>
+          </div>
+          <div (click)="switchTab('obserwowani')">
+            <strong>{{user.following?.length || 0}}</strong>
+            <span class="count-label">Obserwuje</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button [class.active]="activeTab==='posty'" (click)="switchTab('posty')">Posty</button>
+      <button [class.active]="activeTab==='moje-ogloszenia'" (click)="switchTab('moje-ogloszenia')">Ogłoszenia</button>
+      <button [class.active]="activeTab==='obserwujacy'" (click)="switchTab('obserwujacy')">Obserwujący</button>
+      <button [class.active]="activeTab==='obserwowani'" (click)="switchTab('obserwowani')">Obserwuje</button>
+    </div>
+
+    <!-- Tab: Posty -->
+    <div *ngIf="activeTab === 'posty'" class="tab-content">
+      <!-- BRAK SEKCJI DODAWANIA POSTA -->
+      <div class="posts-grid">
+        <div *ngIf="user.posts?.length === 0" class="empty-state">
+          <p>Brak postów.</p>
+        </div>
+        <div class="post-card" *ngFor="let post of user.posts">
+          <div class="post-header">
+            <div class="post-avatar">🌱</div>
+            <div>
+              <div class="post-meta-name">{{user.name}}</div>
+              <div class="post-meta-date">{{post.created_at | date:'dd MMMM yyyy'}}</div>
+            </div>
+          </div>
+          <div class="post-content">
+            <p>{{post.content}}</p>
+          </div>
+          <div class="post-footer">
+            <button class="post-action">♥ {{post.likes || 0}} polubień</button>
+            <button class="post-action">💬 {{post.comments || 0}} komentarzy</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Ogłoszenia -->
+    <div *ngIf="activeTab === 'moje-ogloszenia'" class="tab-content">
+      <div *ngIf="offersLoading" class="loading-spinner">Ładowanie ogłoszeń...</div>
+
+      <div *ngIf="!offersLoading && user.offers?.length === 0" class="empty-state">
+        <p>Brak ogłoszeń.</p>
+      </div>
+
+      <div class="offers-grid" *ngIf="!offersLoading && user.offers?.length > 0">
+        <div *ngFor="let offer of user.offers" class="offer-wrapper" (click)="goToOfferDetails(offer.id)">
+          <div class="offer-card">
+            <div class="offer-image" *ngIf="offer.image_url; else noImage">
+              <img [src]="offer.image_url" [alt]="offer.title">
+            </div>
+            <ng-template #noImage>
+              <div class="offer-image placeholder">📦</div>
+            </ng-template>
+            <div class="offer-content">
+              <h3>{{offer.title}}</h3>
+              <p class="offer-description">{{offer.description | slice:0:80}}...</p>
+              <div class="offer-meta">
+                <span *ngIf="offer.price !== null && offer.price !== undefined">
+                  💰 {{offer.price === 0 ? 'Za darmo' : offer.price + ' zł'}}
+                </span>
+                <span *ngIf="offer.location">📍 {{offer.location}}</span>
+                <span class="offer-category">🏷️ {{offer.category}}</span>
+              </div>
+            </div>
+            <!-- BRAK PRZYCISKU USUŃ -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab: Obserwujący -->
+    <div *ngIf="activeTab === 'obserwujacy'" class="tab-content">
+      <div class="people-list" *ngIf="user.followers?.length > 0; else noFollowers">
+        <div class="person-row" *ngFor="let follower of user.followers">
+          <div class="person-avatar">🌻</div>
+          <div class="person-info">
+            <div class="person-name">{{follower.name}}</div>
+            <div class="person-username">{{follower.username}}</div>
+            <div class="person-bio">{{follower.bio}}</div>
+          </div>
+        </div>
+      </div>
+      <ng-template #noFollowers>
+        <div class="empty-state">
+          <p>Brak obserwujących.</p>
+        </div>
       </ng-template>
     </div>
 
-    <h1>{{ user.username }}</h1>
-    <p class="email">{{ user.email }}</p>
-
-    <div class="section" *ngIf="user.bio">
-      <h3>Bio</h3>
-      <p>{{ user.bio }}</p>
-    </div>
-
-    <div class="section" *ngIf="user.phone">
-      <h3>Telefon</h3>
-      <p>{{ user.phone }}</p>
+    <!-- Tab: Obserwuje -->
+    <div *ngIf="activeTab === 'obserwowani'" class="tab-content">
+      <div class="people-list" *ngIf="user.following?.length > 0; else noFollowing">
+        <div class="person-row" *ngFor="let follow of user.following">
+          <div class="person-avatar">🌻</div>
+          <div class="person-info">
+            <div class="person-name">{{follow.name}}</div>
+            <div class="person-username">{{follow.username}}</div>
+            <div class="person-bio">{{follow.bio}}</div>
+          </div>
+        </div>
+      </div>
+      <ng-template #noFollowing>
+        <div class="empty-state">
+          <p>Nie obserwuje jeszcze nikogo.</p>
+        </div>
+      </ng-template>
     </div>
   </div>
 </div>

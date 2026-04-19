@@ -414,7 +414,11 @@
         <div class="post-author">
           <div class="avatar">🌱</div>
           <div class="author-info">
-            <div class="name">{{ getUserName(post.user_id) }}</div>
+            <div class="name">
+                <a [routerLink]="['/profil', post.user_id]">
+                    {{ getUserName(post.user_id) }}
+                </a>
+            </div>
             <div class="date">{{ post.created_at | date:'dd MMMM yyyy, HH:mm' }}</div>
           </div>
         </div>
