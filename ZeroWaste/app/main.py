@@ -10,9 +10,12 @@ from ZeroWaste.app.routers import categories, offers, users, auth
 import ZeroWaste.app.routers.categories as categories_module
 
 from ZeroWaste.app.routers import messages
+from ZeroWaste.app.models.post import Post
 from ZeroWaste.app.models.category import Category
 from ZeroWaste.app.models.offer import Offer
 from ZeroWaste.app.models.user import User
+from ZeroWaste.app.routers import posts
+
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -31,7 +34,7 @@ app = FastAPI()
 
 app.mount("/media", StaticFiles(directory=MEDIA_DIR), name="media")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
-
+app.include_router(posts.router)
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):

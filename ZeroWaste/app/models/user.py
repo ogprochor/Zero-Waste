@@ -15,6 +15,8 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     offers = relationship("Offer", back_populates="owner")
+    posts = relationship("Post", back_populates="owner")
     bio = Column(Text, nullable=True)
     phone = Column(String(50), nullable=True)
     avatar_url = Column(String(500), nullable=True)
+    post_likes = relationship("PostLike", back_populates="user", cascade="all, delete-orphan")

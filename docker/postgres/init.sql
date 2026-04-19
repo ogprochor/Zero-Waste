@@ -43,6 +43,22 @@ CREATE TABLE messages (
     is_read BOOLEAN DEFAULT FALSE
 );
 
+CREATE TABLE posts (
+    id SERIAL PRIMARY KEY,
+    content TEXT NOT NULL,
+    image_url TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE post_likes (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    post_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(user_id, post_id)
+);
+
 INSERT INTO categories (name) VALUES
     ('Jedzenie'),
     ('Elektronika'),
