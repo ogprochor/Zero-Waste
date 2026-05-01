@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from datetime import timedelta
 from urllib.parse import urlencode, quote
 from urllib.request import urlopen, Request as UrlRequest
-from urllib.error import HTTPError
+from urllib.error import HTTPError, URLError
 import json
 import os
 import secrets
@@ -32,20 +32,39 @@ oauth2_scheme = OAuth2PasswordBearer(
     auto_error=False
 )
 
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:4200")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:4200").rstrip("/")
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET", "")
+GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI", "").strip()
 FACEBOOK_APP_ID = os.getenv("FACEBOOK_APP_ID", "")
 FACEBOOK_APP_SECRET = os.getenv("FACEBOOK_APP_SECRET", "")
+FACEBOOK_REDIRECT_URI = os.getenv("FACEBOOK_REDIRECT_URI", "").strip()
 
 
 def get_base_url(request: Request) -> str:
     return f"{request.url.scheme}://{request.url.netloc}"
 
 
+def get_google_redirect_uri(request: Request) -> str:
+    """
+    Ten adres MUSI być identyczny jak w Google Cloud Console.
+    Lokalnie najwygodniej ustawić w .env:
+    GOOGLE_REDIRECT_URI=http://127.0.0.1:8000/auth/oauth/google/callback
+    """
+    if GOOGLE_REDIRECT_URI:
+        return GOOGLE_REDIRECT_URI
+    return f"{get_base_url(request)}/auth/oauth/google/callback"
+
+
+def get_facebook_redirect_uri(request: Request) -> str:
+    if FACEBOOK_REDIRECT_URI:
+        return FACEBOOK_REDIRECT_URI
+    return f"{get_base_url(request)}/auth/oauth/facebook/callback"
+
+
 def json_get(url: str):
     req = UrlRequest(url, headers={"Accept": "application/json"})
-    with urlopen(req) as response:
+    with urlopen(req, timeout=15) as response:
         return json.loads(response.read().decode("utf-8"))
 
 
@@ -60,16 +79,22 @@ def json_post(url: str, payload: dict):
         },
         method="POST",
     )
-    with urlopen(req) as response:
+    with urlopen(req, timeout=15) as response:
         return json.loads(response.read().decode("utf-8"))
 
 
+def build_frontend_error_redirect(message: str) -> str:
+    params = urlencode({"error": message})
+    return f"{FRONTEND_URL}/auth/social-callback?{params}"
+
+
 def get_or_create_oauth_user(db: Session, email: str, username: str):
+    email = email.strip().lower()
     user = db.query(UserModel).filter(UserModel.email == email).first()
     if user:
         return user
 
-    base_username = username or email.split("@")[0]
+    base_username = (username or email.split("@")[0]).strip()
     safe_username = "".join(ch for ch in base_username if ch.isalnum() or ch in "_.-")[:30]
     if not safe_username:
         safe_username = "user"
@@ -101,6 +126,21 @@ def build_frontend_redirect(user: UserModel):
         "email": user.email,
     })
     return f"{FRONTEND_URL}/auth/social-callback?{params}"
+
+
+def build_google_oauth_url(request: Request) -> str:
+    redirect_uri = get_google_redirect_uri(request)
+
+    params = urlencode({
+        "client_id": GOOGLE_CLIENT_ID,
+        "redirect_uri": redirect_uri,
+        "response_type": "code",
+        "scope": "openid email profile",
+        "access_type": "offline",
+        "prompt": "select_account",
+    })
+
+    return f"https://accounts.google.com/o/oauth2/v2/auth?{params}"
 
 
 @router.post("/register", response_model=User, status_code=status.HTTP_201_CREATED)
@@ -273,26 +313,36 @@ def google_oauth_start(request: Request):
     if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
         raise HTTPException(status_code=500, detail="Brak konfiguracji GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET")
 
-    redirect_uri = f"{get_base_url(request)}/auth/oauth/google/callback"
+    return {"redirect_url": build_google_oauth_url(request)}
 
-    params = urlencode({
-        "client_id": GOOGLE_CLIENT_ID,
-        "redirect_uri": redirect_uri,
-        "response_type": "code",
-        "scope": "openid email profile",
-        "access_type": "offline",
-        "prompt": "select_account",
-    })
 
-    return {"redirect_url": f"https://accounts.google.com/o/oauth2/v2/auth?{params}"}
+@router.get("/oauth/google/start-frontend")
+def google_oauth_start_frontend(request: Request):
+    if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
+        return RedirectResponse(
+            build_frontend_error_redirect("Brak konfiguracji GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET")
+        )
+
+    return RedirectResponse(build_google_oauth_url(request))
 
 
 @router.get("/oauth/google/callback")
-def google_oauth_callback(code: str, request: Request, db: Session = Depends(get_db)):
-    if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
-        raise HTTPException(status_code=500, detail="Brak konfiguracji Google OAuth")
+def google_oauth_callback(
+    request: Request,
+    code: str | None = None,
+    error: str | None = None,
+    db: Session = Depends(get_db)
+):
+    if error:
+        return RedirectResponse(build_frontend_error_redirect(f"Google OAuth: {error}"))
 
-    redirect_uri = f"{get_base_url(request)}/auth/oauth/google/callback"
+    if not code:
+        return RedirectResponse(build_frontend_error_redirect("Google nie zwrócił kodu autoryzacyjnego"))
+
+    if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
+        return RedirectResponse(build_frontend_error_redirect("Brak konfiguracji Google OAuth"))
+
+    redirect_uri = get_google_redirect_uri(request)
 
     try:
         token_data = json_post("https://oauth2.googleapis.com/token", {
@@ -305,27 +355,31 @@ def google_oauth_callback(code: str, request: Request, db: Session = Depends(get
 
         id_token = token_data.get("id_token")
         if not id_token:
-            raise HTTPException(status_code=400, detail="Google nie zwrócił id_token")
+            return RedirectResponse(build_frontend_error_redirect("Google nie zwrócił id_token"))
 
         token_info = json_get(
             f"https://oauth2.googleapis.com/tokeninfo?id_token={quote(id_token)}"
         )
 
         if token_info.get("aud") != GOOGLE_CLIENT_ID:
-            raise HTTPException(status_code=400, detail="Nieprawidłowy token Google")
+            return RedirectResponse(build_frontend_error_redirect("Nieprawidłowy token Google"))
 
         email = token_info.get("email")
         username = token_info.get("name") or (email.split("@")[0] if email else "google_user")
 
         if not email:
-            raise HTTPException(status_code=400, detail="Google nie zwrócił adresu email")
+            return RedirectResponse(build_frontend_error_redirect("Google nie zwrócił adresu email"))
 
         user = get_or_create_oauth_user(db, email=email, username=username)
         return RedirectResponse(build_frontend_redirect(user))
 
     except HTTPError as e:
         detail = e.read().decode("utf-8", errors="ignore")
-        raise HTTPException(status_code=400, detail=f"Google OAuth error: {detail}")
+        return RedirectResponse(build_frontend_error_redirect(f"Google OAuth error: {detail}"))
+    except URLError as e:
+        return RedirectResponse(build_frontend_error_redirect(f"Błąd połączenia z Google: {e.reason}"))
+    except Exception:
+        return RedirectResponse(build_frontend_error_redirect("Nie udało się zalogować przez Google"))
 
 
 @router.get("/oauth/facebook/start")
@@ -333,7 +387,7 @@ def facebook_oauth_start(request: Request):
     if not FACEBOOK_APP_ID or not FACEBOOK_APP_SECRET:
         raise HTTPException(status_code=500, detail="Brak konfiguracji FACEBOOK_APP_ID / FACEBOOK_APP_SECRET")
 
-    redirect_uri = f"{get_base_url(request)}/auth/oauth/facebook/callback"
+    redirect_uri = get_facebook_redirect_uri(request)
 
     params = urlencode({
         "client_id": FACEBOOK_APP_ID,
@@ -345,12 +399,31 @@ def facebook_oauth_start(request: Request):
     return {"redirect_url": f"https://www.facebook.com/v23.0/dialog/oauth?{params}"}
 
 
+@router.get("/oauth/facebook/start-frontend")
+def facebook_oauth_start_frontend(request: Request):
+    if not FACEBOOK_APP_ID or not FACEBOOK_APP_SECRET:
+        return RedirectResponse(
+            build_frontend_error_redirect("Brak konfiguracji FACEBOOK_APP_ID / FACEBOOK_APP_SECRET")
+        )
+
+    redirect_uri = get_facebook_redirect_uri(request)
+
+    params = urlencode({
+        "client_id": FACEBOOK_APP_ID,
+        "redirect_uri": redirect_uri,
+        "scope": "email,public_profile",
+        "response_type": "code",
+    })
+
+    return RedirectResponse(f"https://www.facebook.com/v23.0/dialog/oauth?{params}")
+
+
 @router.get("/oauth/facebook/callback")
 def facebook_oauth_callback(code: str, request: Request, db: Session = Depends(get_db)):
     if not FACEBOOK_APP_ID or not FACEBOOK_APP_SECRET:
         raise HTTPException(status_code=500, detail="Brak konfiguracji Facebook OAuth")
 
-    redirect_uri = f"{get_base_url(request)}/auth/oauth/facebook/callback"
+    redirect_uri = get_facebook_redirect_uri(request)
 
     try:
         token_data = json_get(
@@ -390,39 +463,3 @@ def facebook_oauth_callback(code: str, request: Request, db: Session = Depends(g
     except HTTPError as e:
         detail = e.read().decode("utf-8", errors="ignore")
         raise HTTPException(status_code=400, detail=f"Facebook OAuth error: {detail}")
-
-
-@router.get("/oauth/google/start-frontend")
-def google_oauth_start_frontend(request: Request):
-    if not GOOGLE_CLIENT_ID or not GOOGLE_CLIENT_SECRET:
-        raise HTTPException(status_code=500, detail="Brak konfiguracji GOOGLE_CLIENT_ID / GOOGLE_CLIENT_SECRET")
-
-    redirect_uri = f"{get_base_url(request)}/auth/oauth/google/callback"
-
-    params = urlencode({
-        "client_id": GOOGLE_CLIENT_ID,
-        "redirect_uri": redirect_uri,
-        "response_type": "code",
-        "scope": "openid email profile",
-        "access_type": "offline",
-        "prompt": "select_account",
-    })
-
-    return RedirectResponse(f"https://accounts.google.com/o/oauth2/v2/auth?{params}")
-
-
-@router.get("/oauth/facebook/start-frontend")
-def facebook_oauth_start_frontend(request: Request):
-    if not FACEBOOK_APP_ID or not FACEBOOK_APP_SECRET:
-        raise HTTPException(status_code=500, detail="Brak konfiguracji FACEBOOK_APP_ID / FACEBOOK_APP_SECRET")
-
-    redirect_uri = f"{get_base_url(request)}/auth/oauth/facebook/callback"
-
-    params = urlencode({
-        "client_id": FACEBOOK_APP_ID,
-        "redirect_uri": redirect_uri,
-        "scope": "email,public_profile",
-        "response_type": "code",
-    })
-
-    return RedirectResponse(f"https://www.facebook.com/v23.0/dialog/oauth?{params}")

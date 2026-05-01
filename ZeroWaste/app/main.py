@@ -6,17 +6,13 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
 
 from ZeroWaste.app.db.database import engine
-from ZeroWaste.app.routers import categories, offers, users, auth
+from ZeroWaste.app.routers import auth, categories, messages, offers, posts, users
 import ZeroWaste.app.routers.categories as categories_module
 
-from ZeroWaste.app.routers import messages
-from ZeroWaste.app.models.post import Post
-from ZeroWaste.app.models.category import Category
-from ZeroWaste.app.models.offer import Offer
-from ZeroWaste.app.models.user import User
-from ZeroWaste.app.routers import posts
-
-
+from ZeroWaste.app.models.category import Category  # noqa: F401
+from ZeroWaste.app.models.offer import Offer  # noqa: F401
+from ZeroWaste.app.models.post import Post  # noqa: F401
+from ZeroWaste.app.models.user import User  # noqa: F401
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 MEDIA_DIR = BASE_DIR / "media"
@@ -34,7 +30,7 @@ app = FastAPI()
 
 app.mount("/media", StaticFiles(directory=MEDIA_DIR), name="media")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
-app.include_router(posts.router)
+
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
@@ -54,6 +50,8 @@ async def general_exception_handler(request: Request, exc: Exception):
             "error": "Internal server error"
         },
     )
+
+
 @app.get("/")
 def root():
     return {"status": "ok"}
@@ -96,11 +94,12 @@ app.add_middleware(
 
 @app.on_event("startup")
 def on_startup() -> None:
-    print(" Aplikacja startuje...")
+    print("Aplikacja startuje...")
 
 
 app.include_router(categories.router)
 app.include_router(offers.router)
 app.include_router(users.router)
 app.include_router(auth.router)
-app.include_router(messages.router, prefix="/messages", tags=["messages"])
+app.include_router(posts.router)
+app.include_router(messages.router)
