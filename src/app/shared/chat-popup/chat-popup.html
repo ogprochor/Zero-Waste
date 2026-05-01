@@ -1,20 +1,46 @@
 <div class="chat-window" *ngIf="isOpen$ | async">
   <div class="chat-header">
     <span>Czat: <strong>{{ sellerName$ | async }}</strong></span>
-    <button (click)="close()" class="close-btn">×</button>
+    <button (click)="close()" class="close-btn" type="button" aria-label="Zamknij czat">×</button>
   </div>
-  
+
   <div class="chat-body">
-    <div *ngFor="let msg of messages" [ngClass]="{'msg-self': msg.self, 'msg-other': !msg.self}">
-      {{ msg.text }}
+    <div class="chat-info" *ngIf="loading">Ładowanie wiadomości...</div>
+    <div class="chat-error" *ngIf="error">{{ error }}</div>
+
+    <div
+      class="message-row"
+      *ngFor="let msg of messages; trackBy: trackByMessageId"
+      [class.message-row--self]="msg.self"
+      [class.message-row--other]="!msg.self"
+    >
+      <div class="message-bubble" [class.msg-self]="msg.self" [class.msg-other]="!msg.self">
+        <div class="message-text">{{ msg.text }}</div>
+
+        <div class="message-meta">
+          <span>{{ formatTime(msg.createdAt) }}</span>
+          <span *ngIf="msg.self" class="read-status">
+            {{ msg.isRead ? 'Odczytano' : 'Wysłano' }}
+          </span>
+        </div>
+      </div>
     </div>
-    <div class="placeholder-text" *ngIf="messages.length === 0">
+
+    <div class="placeholder-text" *ngIf="!loading && messages.length === 0">
       Napisz pierwszą wiadomość...
     </div>
   </div>
 
   <div class="chat-footer">
-    <input type="text" [(ngModel)]="message" (keyup.enter)="sendMessage()" placeholder="Wpisz wiadomość...">
-    <button (click)="sendMessage()">➤</button>
+    <input
+      type="text"
+      [(ngModel)]="message"
+      (keyup.enter)="sendMessage()"
+      placeholder="Wpisz wiadomość..."
+      [disabled]="sending"
+    >
+    <button (click)="sendMessage()" type="button" [disabled]="sending || !message.trim()">
+      ➤
+    </button>
   </div>
 </div>

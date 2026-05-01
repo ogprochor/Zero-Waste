@@ -10,6 +10,13 @@
 
       <a
         *ngIf="isLoggedIn()"
+        routerLink="/wiadomosci"
+        (click)="drawer.close()">
+        Wiadomości
+      </a>
+
+      <a
+        *ngIf="isLoggedIn()"
         routerLink="/dodaj-oferte"
         (click)="drawer.close()">
         Dodaj ofertę
@@ -74,6 +81,13 @@
           <a routerLink="/education" routerLinkActive="is-active">Edukacja</a>
           <a routerLink="/organizations" routerLinkActive="is-active">Organizacje</a>
           <a routerLink="/blog" routerLinkActive="is-active">Blog</a>
+
+          <a
+            *ngIf="isLoggedIn()"
+            routerLink="/wiadomosci"
+            routerLinkActive="is-active">
+            Wiadomości
+          </a>
 
           <a
             *ngIf="isLoggedIn()"

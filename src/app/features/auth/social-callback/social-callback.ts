@@ -19,13 +19,20 @@ export class SocialCallbackComponent implements OnInit {
   ngOnInit(): void {
     const qp = this.route.snapshot.queryParamMap;
 
+    const error = qp.get('error');
+    if (error) {
+      this.notificationService.error(error);
+      this.router.navigate(['/login']);
+      return;
+    }
+
     const token = qp.get('token');
     const id = qp.get('id');
     const username = qp.get('username');
     const email = qp.get('email');
 
     if (!token || !id || !username || !email) {
-      this.notificationService.error('Nie udało się zalogować przez social login.');
+      this.notificationService.error('Nie udało się zalogować przez Google. Brakuje danych logowania.');
       this.router.navigate(['/login']);
       return;
     }

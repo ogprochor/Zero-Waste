@@ -1,0 +1,157 @@
+.messages-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+.messages-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0 0 6px;
+    font-size: 32px;
+    color: #1f2937;
+  }
+
+  p {
+    margin: 0;
+    color: #6b7280;
+  }
+}
+
+.back-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.messages-card {
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.loading,
+.error,
+.empty {
+  padding: 32px;
+  text-align: center;
+}
+
+.error {
+  color: #b00020;
+  background: #ffe3e3;
+}
+
+.empty {
+  h2 {
+    margin: 0 0 8px;
+    color: #1f2937;
+  }
+
+  p {
+    margin: 0;
+    color: #6b7280;
+  }
+}
+
+.conversation {
+  width: 100%;
+  border: 0;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 16px;
+  display: flex;
+  gap: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: #f9fafb;
+  }
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #e5e7eb;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  span {
+    font-size: 24px;
+  }
+}
+
+.conversation-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.conversation-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+
+  strong {
+    color: #111827;
+    font-size: 16px;
+  }
+
+  span {
+    color: #9ca3af;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+}
+
+.conversation-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  p {
+    margin: 0;
+    color: #6b7280;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
+.badge {
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: #007bff;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

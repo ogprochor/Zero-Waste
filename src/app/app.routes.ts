@@ -14,6 +14,7 @@ import { MyOffersComponent } from './features/my-offers/my-offers';
 import { ProfileEditComponent } from './features/profile-edit/profile-edit';
 import { ProfileComponent } from './features/profile/profile';
 import { PublicProfileComponent } from './features/public-profile/public-profile';
+import { MessagesComponent } from './features/messages/messages';
 import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -36,6 +37,7 @@ export const routes: Routes = [
       { path: 'profil', component: ProfileComponent, canActivate: [authGuard] },
       { path: 'profil/:id', component: PublicProfileComponent },
       { path: 'my-offers', component: MyOffersComponent, canActivate: [authGuard] },
+      { path: 'wiadomosci', component: MessagesComponent, canActivate: [authGuard] },
       { path: 'blog', loadComponent: () => import('./features/blog/blog').then(m => m.BlogComponent)}
     ],
   },

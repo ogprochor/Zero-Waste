@@ -75,11 +75,11 @@ export class AuthService {
   }
 
   startGoogleLogin(): void {
-    window.location.href = `${this.API_URL}/auth/oauth/google/start-frontend`;
+    window.location.assign(`${this.API_URL}/auth/oauth/google/start-frontend`);
   }
 
   startFacebookLogin(): void {
-    window.location.href = `${this.API_URL}/auth/oauth/facebook/start-frontend`;
+    window.location.assign(`${this.API_URL}/auth/oauth/facebook/start-frontend`);
   }
 
   fetchCurrentUser(): Observable<CurrentUser> {

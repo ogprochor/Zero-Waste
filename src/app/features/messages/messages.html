@@ -1,0 +1,63 @@
+<section class="messages-page">
+  <div class="messages-header">
+    <div>
+      <h1>Wiadomości</h1>
+      <p>Tu znajdziesz swoje rozmowy z innymi użytkownikami.</p>
+    </div>
+
+    <a routerLink="/lista" class="back-link">
+      Wróć do ogłoszeń
+    </a>
+  </div>
+
+  <div class="messages-card">
+    <div class="loading" *ngIf="loading">
+      Ładowanie rozmów...
+    </div>
+
+    <div class="error" *ngIf="error">
+      {{ error }}
+    </div>
+
+    <div class="empty" *ngIf="!loading && !error && conversations.length === 0">
+      <h2>Brak rozmów</h2>
+      <p>Gdy ktoś do Ciebie napisze albo Ty napiszesz do kogoś, rozmowa pojawi się tutaj.</p>
+    </div>
+
+    <button
+      type="button"
+      class="conversation"
+      *ngFor="let conversation of conversations"
+      (click)="openConversation(conversation)"
+    >
+      <div class="avatar">
+        <img
+          *ngIf="conversation.other_user.avatar_url; else avatarPlaceholder"
+          [src]="'http://127.0.0.1:8000' + conversation.other_user.avatar_url"
+          [alt]="conversation.other_user.username"
+        >
+
+        <ng-template #avatarPlaceholder>
+          <span>👤</span>
+        </ng-template>
+      </div>
+
+      <div class="conversation-main">
+        <div class="conversation-top">
+          <strong>{{ conversation.other_user.username }}</strong>
+          <span>{{ formatDate(conversation.last_message_time) }}</span>
+        </div>
+
+        <div class="conversation-bottom">
+          <p>
+            {{ conversation.last_message || 'Brak wiadomości' }}
+          </p>
+
+          <span class="badge" *ngIf="conversation.unread_count > 0">
+            {{ conversation.unread_count }}
+          </span>
+        </div>
+      </div>
+    </button>
+  </div>
+</section>
