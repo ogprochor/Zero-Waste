@@ -1,74 +1,215 @@
 .edit-offer {
   max-width: 760px;
   margin: 0 auto;
-  padding: 24px 16px;
+  padding: 32px 24px;
+  background: white;
+  border-radius: 28px;
+  border: 1px solid #D4DDD0;
+  box-shadow: 0 8px 28px rgba(44, 26, 14, 0.06);
 }
 
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 16px;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #F0EBE0;
 }
 
 .back {
+  --bg: #D4DDD0;
+  --hover-bg: #4A5C3A;
+  --hover-text: white;
+  
   text-decoration: none;
-  opacity: 0.85;
+  color: #4A5C3A;
+  cursor: pointer;
+  border: 1px solid var(--bg);
+  border-radius: 28px;
+  padding: 0.5em 1.2em;
+  background: transparent;
+  transition: 0.2s;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  &:hover {
+    color: var(--hover-text);
+    transform: translate(-0.2rem, -0.2rem);
+    background: var(--hover-bg);
+    box-shadow: 0.2rem 0.2rem 6px var(--bg);
+  }
+
+  &:active {
+    transform: translate(0);
+    box-shadow: none;
+  }
 }
 
 .info {
-  opacity: 0.8;
+  color: #7A9468;
+  font-size: 0.85rem;
+  font-style: italic;
 }
 
 .msg {
-  padding: 12px 14px;
-  border-radius: 12px;
-  margin-bottom: 12px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
 }
 
 .msg--error {
-  background: rgba(231, 76, 60, 0.12);
-  border: 1px solid rgba(231, 76, 60, 0.25);
+  background: rgba(231, 76, 60, 0.1);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  color: #c0392b;
 }
 
 .msg--success {
-  background: rgba(46, 204, 113, 0.12);
-  border: 1px solid rgba(46, 204, 113, 0.25);
+  background: rgba(74, 92, 58, 0.1);
+  border: 1px solid rgba(74, 92, 58, 0.3);
+  color: #4A5C3A;
 }
 
 .form {
   display: grid;
-  gap: 12px;
+  gap: 20px;
 }
 
 label {
   display: grid;
-  gap: 6px;
+  gap: 8px;
+  font-weight: 500;
+  color: #2C1A0E;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
 }
 
 input,
 textarea,
 select {
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 12px 16px;
+  border-radius: 16px;
+  border: 1px solid #D4DDD0;
   outline: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  background: #FAF7F2;
+  transition: all 0.2s;
+
+  &:focus {
+    border-color: #7A9468;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(122, 148, 104, 0.1);
+  }
+}
+
+textarea {
+  resize: vertical;
+  min-height: 120px;
 }
 
 .actions {
-  margin-top: 8px;
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
 }
 
 button {
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  background: #fff;
+  --bg: #4A5C3A;
+  --hover-bg: white;
+  --hover-text: #4A5C3A;
+  
+  color: white;
   cursor: pointer;
+  border: 1px solid var(--bg);
+  border-radius: 28px;
+  padding: 0.7em 1.8em;
+  background: var(--bg);
+  transition: 0.2s;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  &:hover:not(:disabled) {
+    color: var(--hover-text);
+    transform: translate(-0.2rem, -0.2rem);
+    background: var(--hover-bg);
+    box-shadow: 0.2rem 0.2rem 6px var(--bg);
+  }
+
+  &:active:not(:disabled) {
+    transform: translate(0);
+    box-shadow: none;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
 }
 
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+/* Przycisk anuluj/cancel */
+.cancel-btn {
+  --bg: #D4DDD0;
+  --hover-bg: #4A5C3A;
+  --hover-text: white;
+  
+  background: transparent;
+  color: #4A5C3A;
+
+  &:hover:not(:disabled) {
+    background: var(--hover-bg);
+  }
+}
+
+/* Przycisk usuwania w edycji */
+.delete-btn {
+  --bg: #c44;
+  --hover-bg: #c44;
+  --hover-text: white;
+  
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #c44;
+
+  &:hover:not(:disabled) {
+    background: var(--hover-bg);
+    box-shadow: 0.2rem 0.2rem 6px #c44;
+  }
+}
+
+/* Responsywność */
+@media (max-width: 600px) {
+  .my-offers-container {
+    padding: 20px 16px;
+  }
+
+  .my-offers-container h2 {
+    font-size: 1.5rem;
+  }
+
+  .edit-offer {
+    padding: 24px 20px;
+    margin: 0 12px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actions {
+    flex-wrap: wrap;
+  }
+
+  button {
+    padding: 0.6em 1.4em;
+  }
 }

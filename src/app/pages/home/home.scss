@@ -1,13 +1,11 @@
 :host {
   display: block;
-  color: var(--zw-text-main);
+  color: #2C1A0E;
 }
-
-
 
 .hero {
   width: 100%;
-  background: linear-gradient(135deg, #00914a, #00a34a);
+  background: linear-gradient(135deg, #4A5C3A, #7A9468);
   color: #ffffff;
   padding: 56px 0 72px;
 }
@@ -24,10 +22,12 @@
   gap: 6px;
   padding: 4px 12px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
-  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.15);
+  font-size: 0.7rem;
   font-weight: 600;
   margin-bottom: 8px;
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.05em;
 }
 
 .hero__eyebrow {
@@ -42,6 +42,7 @@
   font-size: clamp(1.9rem, 3vw, 2.4rem);
   font-weight: 700;
   line-height: 1.25;
+  font-family: 'Playfair Display', serif;
 }
 
 .hero__lead {
@@ -61,13 +62,9 @@
   min-width: 180px;
 }
 
-
-
 .offer-link {
   text-decoration: none;
 }
-
-
 
 .preview-list {
   max-width: 1200px;
@@ -78,6 +75,8 @@
     font-size: 1.25rem;
     font-weight: 600;
     margin-bottom: 20px;
+    color: #2C1A0E;
+    font-family: 'Playfair Display', serif;
   }
 }
 
@@ -85,18 +84,21 @@
   margin-top: 12px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
+  gap: 20px;
 }
 
 .see-all {
   display: inline-block;
   margin-top: 16px;
-  color: var(--zw-primary);
-  font-weight: 500;
+  color: #4A5C3A;
+  font-weight: 600;
   cursor: pointer;
   text-decoration: none;
+  font-family: 'DM Sans', sans-serif;
+  transition: color 0.2s;
 
   &:hover {
+    color: #2C1A0E;
     text-decoration: underline;
   }
 }

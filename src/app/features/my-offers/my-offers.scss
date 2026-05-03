@@ -1,14 +1,20 @@
 .my-offers-container {
-  padding: 20px;
+  padding: 32px 24px;
   max-width: 1200px;
   margin: 0 auto;
 
-  h2 { margin-bottom: 24px; color: #333; }
+  h2 {
+    margin-bottom: 28px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: #2C1A0E;
+  }
 
   .offers-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
   }
 
   .offer-wrapper {
@@ -21,35 +27,50 @@
   }
 
   .delete-action-btn {
+    --bg: #e74c3c;
+    --hover-bg: #c0392b;
+    --hover-text: white;
+    
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #e74c3c;
+    top: 12px;
+    right: 12px;
     color: white;
-    border: none;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
     cursor: pointer;
+    border: 1px solid var(--bg);
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    background: var(--bg);
+    transition: 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-    opacity: 0.8;
-    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    opacity: 0;
     z-index: 5;
+    font-size: 16px;
 
     &:hover {
-      background: #c0392b;
-      transform: scale(1.1);
+      color: var(--hover-text);
+      transform: translate(-0.2rem, -0.2rem);
+      background: var(--hover-bg);
+      box-shadow: 0.2rem 0.2rem 6px var(--bg);
       opacity: 1;
+    }
+
+    &:active {
+      transform: translate(0);
+      box-shadow: none;
     }
   }
 
   .empty-state {
     text-align: center;
-    padding: 50px;
-    background: #f9f9f9;
-    border-radius: 12px;
+    padding: 60px 32px;
+    background: #FAF7F2;
+    border-radius: 24px;
+    border: 1px solid #D4DDD0;
+    color: #7A9468;
+    font-size: 0.95rem;
   }
 }

@@ -56,20 +56,31 @@
       }
 
       .edit-avatar-btn {
-        padding: 8px 16px;
-        background: transparent;
-        border: 1.5px solid #D4DDD0;
-        border-radius: 30px;
-        font-size: 0.7rem;
-        cursor: pointer;
+        --bg: #D4DDD0;
+        --hover-bg: #4A5C3A;
+        --hover-text: white;
+        
         color: #8B6F4E;
+        cursor: pointer;
+        border: 1px solid var(--bg);
+        border-radius: 24px;
+        padding: 0.6em 1.2em;
+        background: var(--bg);
+        transition: 0.2s;
+        font-size: 0.7rem;
         font-family: inherit;
-        transition: all 0.2s;
         width: fit-content;
 
         &:hover {
-          border-color: #4A5C3A;
-          color: #4A5C3A;
+          color: var(--hover-text);
+          transform: translate(-0.25rem, -0.25rem);
+          background: var(--hover-bg);
+          box-shadow: 0.25rem 0.25rem 5px var(--bg);
+        }
+
+        &:active {
+          transform: translate(0);
+          box-shadow: none;
         }
       }
     }
@@ -107,19 +118,30 @@
 
           .edit-profile-btn,
           .change-password-btn {
-            padding: 8px 20px;
-            background: transparent;
-            border: 1.5px solid #D4DDD0;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            cursor: pointer;
+            --bg: #D4DDD0;
+            --hover-bg: #4A5C3A;
+            --hover-text: white;
+            
             color: #8B6F4E;
+            cursor: pointer;
+            border: 1px solid var(--bg);
+            border-radius: 24px;
+            padding: 0.6em 1.4em;
+            background: var(--bg);
+            transition: 0.2s;
+            font-size: 0.75rem;
             font-family: inherit;
-            transition: all 0.2s;
 
             &:hover {
-              border-color: #4A5C3A;
-              color: #4A5C3A;
+              color: var(--hover-text);
+              transform: translate(-0.25rem, -0.25rem);
+              background: var(--hover-bg);
+              box-shadow: 0.25rem 0.25rem 5px var(--bg);
+            }
+
+            &:active {
+              transform: translate(0);
+              box-shadow: none;
             }
           }
         }
@@ -198,34 +220,50 @@
           margin-top: 8px;
 
           button {
-            padding: 10px 24px;
-            background: #4A5C3A;
+            --bg: #4A5C3A;
+            --hover-bg: white;
+            --hover-text: #4A5C3A;
+            
             color: white;
-            border: none;
-            border-radius: 30px;
             cursor: pointer;
+            border: 1px solid var(--bg);
+            border-radius: 24px;
+            padding: 0.6em 1.4em;
+            background: var(--bg);
+            transition: 0.2s;
             font-weight: 500;
             font-family: inherit;
 
             &:hover {
-              background: #5E7A4A;
+              color: var(--hover-text);
+              transform: translate(-0.25rem, -0.25rem);
+              background: var(--hover-bg);
+              box-shadow: 0.25rem 0.25rem 5px var(--bg);
+            }
+
+            &:active {
+              transform: translate(0);
+              box-shadow: none;
             }
 
             &:disabled {
               opacity: 0.5;
               cursor: not-allowed;
+              transform: none;
+              box-shadow: none;
             }
           }
 
           .cancel-btn {
+            --bg: #D4DDD0;
+            --hover-bg: #FAF7F2;
+            --hover-text: #5c3b3a;
+            
             background: transparent;
             color: #8B6F4E;
-            border: 1px solid #D4DDD0;
 
             &:hover {
-              background: #FAF7F2;
-              border-color: #4A5C3A;
-              color: #4A5C3A;
+              background: var(--hover-bg);
             }
           }
         }
@@ -276,17 +314,31 @@
     border: 1px solid #D4DDD0;
 
     .add-post-btn {
-      padding: 12px 24px;
-      background: #4A5C3A;
+      --bg: #4A5C3A;
+      --hover-bg: white;
+      --hover-text: #4A5C3A;
+      
       color: white;
-      border: none;
-      border-radius: 30px;
       cursor: pointer;
+      border: 1px solid var(--bg);
+      border-radius: 24px;
+      padding: 0.6em 1.6em;
+      background: var(--bg);
+      transition: 0.2s;
+      font-weight: 500;
+      margin-top: 10px;
       font-family: inherit;
-      font-size: 0.85rem;
 
       &:hover {
-        background: #5E7A4A;
+        color: var(--hover-text);
+        transform: translate(-0.25rem, -0.25rem);
+        background: var(--hover-bg);
+        box-shadow: 0.25rem 0.25rem 5px var(--bg);
+      }
+
+      &:active {
+        transform: translate(0);
+        box-shadow: none;
       }
     }
 
@@ -315,26 +367,64 @@
         justify-content: flex-end;
 
         .submit-post-btn {
-          padding: 8px 20px;
-          background: #4A5C3A;
+          --bg: #4A5C3A;
+          --hover-bg: white;
+          --hover-text: #4A5C3A;
+          
           color: white;
-          border: none;
-          border-radius: 30px;
           cursor: pointer;
+          border: 1px solid var(--bg);
+          border-radius: 24px;
+          padding: 0.6em 1.4em;
+          background: var(--bg);
+          transition: 0.2s;
+          font-family: inherit;
+
+          &:hover {
+            color: var(--hover-text);
+            transform: translate(-0.25rem, -0.25rem);
+            background: var(--hover-bg);
+            box-shadow: 0.25rem 0.25rem 5px var(--bg);
+          }
+
+          &:active {
+            transform: translate(0);
+            box-shadow: none;
+          }
 
           &:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
           }
         }
 
         .cancel-post-btn {
-          padding: 8px 20px;
-          background: transparent;
-          border: 1px solid #D4DDD0;
-          border-radius: 30px;
-          cursor: pointer;
+          --bg: #D4DDD0;
+          --hover-bg: #FAF7F2;
+          --hover-text: #4A5C3A;
+          
           color: #8B6F4E;
+          cursor: pointer;
+          border: 1px solid var(--bg);
+          border-radius: 24px;
+          padding: 0.6em 1.4em;
+          background: transparent;
+          transition: 0.2s;
+          font-family: inherit;
+
+          &:hover {
+            color: var(--hover-text);
+            transform: translate(-0.25rem, -0.25rem);
+            background: var(--hover-bg);
+            box-shadow: 0.25rem 0.25rem 5px var(--bg);
+          }
+
+          &:active {
+            transform: translate(0);
+            box-shadow: none;
+          }
         }
       }
     }
@@ -399,16 +489,30 @@
       border-top: 1px solid #F0EBE0;
 
       .post-action {
+        --bg: transparent;
+        --hover-bg: #F0EBE0;
+        --hover-text: #4A5C3A;
+        
         background: none;
-        border: none;
+        border: 1px solid transparent;
         color: #8B6F4E;
         font-size: 0.8rem;
         cursor: pointer;
         font-family: inherit;
-        padding: 0;
+        padding: 0.4em 1em;
+        border-radius: 24px;
+        transition: 0.2s;
 
         &:hover {
-          color: #4A5C3A;
+          color: var(--hover-text);
+          transform: translate(-0.25rem, -0.25rem);
+          background: var(--hover-bg);
+          box-shadow: 0.25rem 0.25rem 5px rgba(0,0,0,0.1);
+        }
+
+        &:active {
+          transform: translate(0);
+          box-shadow: none;
         }
       }
     }
@@ -502,29 +606,40 @@
     }
 
     .delete-action-btn {
+      --bg: rgba(231, 76, 60, 0.9);
+      --hover-bg: #c0392b;
+      --hover-text: white;
+      
       position: absolute;
       top: 12px;
       right: 12px;
-      background: rgba(231, 76, 60, 0.9);
       color: white;
-      border: none;
+      cursor: pointer;
+      border: 1px solid var(--bg);
+      border-radius: 50%;
       width: 32px;
       height: 32px;
-      border-radius: 50%;
-      cursor: pointer;
+      background: var(--bg);
+      transition: 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
       opacity: 0;
-      transition: all 0.2s ease;
       z-index: 5;
       font-size: 14px;
 
       &:hover {
-        background: #c0392b;
-        transform: scale(1.05);
+        color: var(--hover-text);
+        transform: translate(-0.25rem, -0.25rem);
+        background: var(--hover-bg);
+        box-shadow: 0.25rem 0.25rem 5px var(--bg);
         opacity: 1;
+      }
+
+      &:active {
+        transform: translate(0);
+        box-shadow: none;
       }
     }
 
@@ -587,21 +702,32 @@
     }
 
     .follow-btn {
-      padding: 6px 18px;
-      border: 1.5px solid #4A5C3A;
-      border-radius: 30px;
-      background: transparent;
+      --bg: #D4DDD0;
+      --hover-bg: #4A5C3A;
+      --hover-text: white;
+      
       color: #4A5C3A;
+      cursor: pointer;
+      border: 1.5px solid #4A5C3A;
+      border-radius: 24px;
+      padding: 0.5em 1.2em;
+      background: transparent;
+      transition: 0.2s;
       font-size: 0.7rem;
       font-family: inherit;
-      cursor: pointer;
       letter-spacing: 0.04em;
-      transition: all 0.2s;
       white-space: nowrap;
 
       &:hover {
-        background: #4A5C3A;
-        color: white;
+        color: var(--hover-text);
+        transform: translate(-0.25rem, -0.25rem);
+        background: var(--hover-bg);
+        box-shadow: 0.25rem 0.25rem 5px #4A5C3A;
+      }
+
+      &:active {
+        transform: translate(0);
+        box-shadow: none;
       }
 
       &.following {
@@ -610,7 +736,10 @@
         color: #8B6F4E;
 
         &:hover {
-          background: #4A5C3A;
+          --bg: #4A5C3A;
+          --hover-bg: #4A5C3A;
+          --hover-text: white;
+          
           color: white;
           border-color: #4A5C3A;
         }
@@ -632,16 +761,31 @@
     }
 
     .btn-primary {
+      --bg: #4A5C3A;
+      --hover-bg: white;
+      --hover-text: #4A5C3A;
+      
       display: inline-block;
-      padding: 10px 24px;
-      background: #4A5C3A;
       color: white;
-      text-decoration: none;
-      border-radius: 30px;
+      cursor: pointer;
+      border: 1px solid var(--bg);
+      border-radius: 24px;
+      padding: 0.6em 1.6em;
+      background: var(--bg);
+      transition: 0.2s;
       font-size: 0.85rem;
+      text-decoration: none;
 
       &:hover {
-        background: #5E7A4A;
+        color: var(--hover-text);
+        transform: translate(-0.25rem, -0.25rem);
+        background: var(--hover-bg);
+        box-shadow: 0.25rem 0.25rem 5px var(--bg);
+      }
+
+      &:active {
+        transform: translate(0);
+        box-shadow: none;
       }
     }
   }

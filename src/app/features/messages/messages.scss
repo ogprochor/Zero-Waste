@@ -2,6 +2,7 @@
   max-width: 900px;
   margin: 0 auto;
   padding: 32px 20px;
+  font-family: 'DM Sans', sans-serif;
 }
 
 .messages-header {
@@ -14,20 +15,50 @@
   h1 {
     margin: 0 0 6px;
     font-size: 32px;
-    color: #1f2937;
+    font-weight: 600;
+    color: #2C1A0E;
+    font-family: 'Playfair Display', serif;
   }
 
   p {
     margin: 0;
-    color: #6b7280;
+    color: #7A9468;
+    font-size: 0.9rem;
   }
 }
 
 .back-link {
-  color: #007bff;
+  --bg: #D4DDD0;
+  --hover-bg: #4A5C3A;
+  --hover-text: white;
+  
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #4A5C3A;
   text-decoration: none;
+  cursor: pointer;
+  border: 1px solid var(--bg);
+  border-radius: 40px;
+  padding: 0.5em 1.2em;
+  background: transparent;
+  transition: 0.2s;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
   font-weight: 600;
   white-space: nowrap;
+}
+
+.back-link:hover {
+  color: var(--hover-text);
+  transform: translate(-0.2rem, -0.2rem);
+  background: var(--hover-bg);
+  box-shadow: 0.2rem 0.2rem 6px var(--bg);
+}
+
+.back-link:active {
+  transform: translate(0);
+  box-shadow: none;
 }
 
 .messages-card {
@@ -45,19 +76,23 @@
 }
 
 .error {
-  color: #b00020;
-  background: #ffe3e3;
+  color: #c0392b;
+  background: rgba(231, 76, 60, 0.08);
+  border-radius: 16px;
+  margin: 16px;
 }
 
 .empty {
   h2 {
     margin: 0 0 8px;
-    color: #1f2937;
+    color: #2C1A0E;
+    font-weight: 600;
+    font-family: 'Playfair Display', serif;
   }
 
   p {
     margin: 0;
-    color: #6b7280;
+    color: #7A9468;
   }
 }
 
@@ -86,7 +121,7 @@
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: #e5e7eb;
+  background: linear-gradient(135deg, #A8BF9A, #4A5C3A);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -101,6 +136,7 @@
 
   span {
     font-size: 24px;
+    color: white;
   }
 }
 
@@ -116,12 +152,14 @@
   margin-bottom: 6px;
 
   strong {
-    color: #111827;
+    color: #2C1A0E;
     font-size: 16px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
   }
 
   span {
-    color: #9ca3af;
+    color: #8B6F4E;
     font-size: 13px;
     white-space: nowrap;
   }
@@ -135,7 +173,8 @@
 
   p {
     margin: 0;
-    color: #6b7280;
+    color: #7A9468;
+    font-size: 0.85rem;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -146,12 +185,13 @@
   min-width: 24px;
   height: 24px;
   padding: 0 7px;
-  border-radius: 999px;
-  background: #007bff;
+  border-radius: 40px;
+  background: #4A5C3A;
   color: white;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  font-family: 'DM Sans', sans-serif;
 }

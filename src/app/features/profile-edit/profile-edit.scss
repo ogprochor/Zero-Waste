@@ -1,108 +1,198 @@
 .profile-edit-container {
   display: flex;
   justify-content: center;
-  padding: 40px 16px;
-  background-color: #f9f9f9;
+  align-items: center;
+  padding: 48px 24px;
+  background: #FAF7F2;
   min-height: 100vh;
+  position: relative;
+}
+
+.profile-edit-container::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 85% 5%, rgba(74,92,58,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 50% at 5% 85%, rgba(168,191,154,0.07) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .profile-edit-card {
   width: 100%;
   max-width: 500px;
-  background: #fff;
-  border-radius: 12px;
-  padding: 32px 24px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s;
+  background: white;
+  border-radius: 28px;
+  padding: 40px 36px;
+  box-shadow: 0 8px 28px rgba(44, 26, 14, 0.08);
+  border: 1px solid #D4DDD0;
+  position: relative;
+  z-index: 1;
+  transition: box-shadow 0.3s ease;
 }
 
 .profile-edit-card:hover {
-  transform: translateY(-2px);
+  box-shadow: 0 12px 36px rgba(74, 92, 58, 0.1);
 }
 
-h2 {
-  margin-bottom: 24px;
+@media (max-width: 600px) {
+  .profile-edit-container {
+    padding: 32px 20px;
+  }
+  
+  .profile-edit-card {
+    padding: 32px 24px;
+  }
+}
+
+.profile-edit-card h2 {
+  margin-bottom: 28px;
   text-align: center;
-  font-size: 24px;
-  color: #333;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #2C1A0E;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  margin-bottom: 18px;
-
-  input {
-    padding: 12px 14px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: border-color 0.2s;
-
-    &:focus {
-      border-color: #4caf50;
-      outline: none;
-    }
-  }
+  margin-bottom: 20px;
 }
 
-label {
-  margin-bottom: 6px;
+.form-group label {
+  margin-bottom: 8px;
   font-weight: 600;
-  color: #555;
+  font-size: 0.85rem;
+  color: #2C1A0E;
+  letter-spacing: 0.03em;
+}
+
+.form-group input {
+  padding: 12px 16px;
+  border: 1px solid #D4DDD0;
+  border-radius: 16px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  background: #FAF7F2;
+  transition: all 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #7A9468;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(122, 148, 104, 0.1);
+}
+
+.form-group input::placeholder {
+  color: #8B6F4E;
+  opacity: 0.5;
 }
 
 .error small {
-  color: #c62828;
-  margin-top: 4px;
+  color: #c44;
+  font-size: 0.7rem;
+  margin-top: 6px;
   display: block;
 }
 
 .message {
-  margin: 12px 0;
-  font-size: 14px;
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-radius: 16px;
+  font-size: 0.85rem;
 }
 
 .message.error {
-  color: #c62828;
+  background: rgba(231, 76, 60, 0.1);
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  color: #c0392b;
 }
 
 .message.success {
-  color: #2e7d32;
+  background: rgba(74, 92, 58, 0.1);
+  border: 1px solid rgba(74, 92, 58, 0.3);
+  color: #4A5C3A;
 }
 
 .buttons {
   display: flex;
-  gap: 12px;
-  margin-top: 20px;
+  gap: 16px;
+  margin-top: 28px;
 }
 
-button {
+/* Przycisk główny (Zmień hasło) – styl Gumroad */
+button[type="submit"] {
+  --bg: #4A5C3A;
+  --hover-bg: white;
+  --hover-text: #4A5C3A;
+  
   flex: 1;
-  padding: 12px 14px;
-  border: none;
-  border-radius: 8px;
+  color: white;
   cursor: pointer;
+  border: 1px solid var(--bg);
+  border-radius: 40px;
+  padding: 0.8em 1.2em;
+  background: var(--bg);
+  transition: 0.2s;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: #fff;
-  background: #4caf50;
-  transition: background 0.2s;
-
-  &:hover:not(:disabled) {
-    background: #43a047;
-  }
 }
 
-button.secondary {
-  background: #e0e0e0;
-  color: #333;
-
-  &:hover:not(:disabled) {
-    background: #d5d5d5;
-  }
+button[type="submit"]:hover:not(:disabled) {
+  color: var(--hover-text);
+  transform: translate(-0.2rem, -0.2rem);
+  background: var(--hover-bg);
+  box-shadow: 0.2rem 0.2rem 6px var(--bg);
 }
 
-button:disabled {
-  opacity: 0.6;
+button[type="submit"]:active:not(:disabled) {
+  transform: translate(0);
+  box-shadow: none;
+}
+
+button[type="submit"]:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
+}
+
+/* Przycisk wtórny (Anuluj) – styl Gumroad */
+button.secondary {
+  --bg: #D4DDD0;
+  --hover-bg: #4A5C3A;
+  --hover-text: white;
+  
+  flex: 1;
+  color: #4A5C3A;
+  cursor: pointer;
+  border: 1px solid var(--bg);
+  border-radius: 40px;
+  padding: 0.8em 1.2em;
+  background: transparent;
+  transition: 0.2s;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+button.secondary:hover:not(:disabled) {
+  color: var(--hover-text);
+  transform: translate(-0.2rem, -0.2rem);
+  background: var(--hover-bg);
+  box-shadow: 0.2rem 0.2rem 6px var(--bg);
+}
+
+button.secondary:active:not(:disabled) {
+  transform: translate(0);
+  box-shadow: none;
+}
+
+button.secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }

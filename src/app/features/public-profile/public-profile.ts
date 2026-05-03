@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { OfferService } from '../../services/offer.service';
 import { CategoryService } from '../../services/category.service';
 import { PostService } from '../../services/post.service';
+import { ChatUiService } from '../../services/chat-ui.service';
 
 @Component({
   selector: 'app-public-profile',
@@ -27,7 +28,8 @@ export class PublicProfileComponent implements OnInit {
     private offerService: OfferService,
     private categoryService: CategoryService,
     private postService: PostService,
-    private router: Router
+    private router: Router,
+    private chatService: ChatUiService
   ) {}
 
   ngOnInit(): void {
@@ -105,6 +107,12 @@ export class PublicProfileComponent implements OnInit {
       },
       error: (err: any) => console.error(err)
     });
+  }
+
+  openChat(): void {
+    if (this.user) {
+      this.chatService.openChat(this.user.name, this.user.id);
+    }
   }
 
   switchTab(tab: any): void {

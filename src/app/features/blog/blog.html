@@ -43,44 +43,67 @@
   .page {
     position: relative;
     z-index: 1;
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 48px 24px 64px;
   }
 
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
+    from { opacity: 0; transform: translateY(24px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ========== FORMULARZ DODAWANIA ========== */
+  /* ========== FORMULARZ DODAWANIA – NOWY WYGLĄD ========== */
   .add-post-section {
     background: white;
-    border: 2px solid var(--mist);
-    border-radius: 24px;
-    padding: 28px;
-    margin-bottom: 48px;
+    border-radius: 28px;
+    padding: 32px;
+    margin-bottom: 56px;
     animation: fadeUp 0.5s ease both;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    box-shadow: 0 8px 28px rgba(44, 26, 14, 0.06);
+    border: 1px solid var(--mist);
+    transition: box-shadow 0.3s ease;
   }
 
-  .add-post-label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+  .add-post-section:hover {
+    box-shadow: 0 12px 36px rgba(44, 26, 14, 0.1);
+  }
+
+  .add-post-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--linen);
+  }
+
+  .add-post-icon {
+    font-size: 2rem;
+  }
+
+  .add-post-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--soil);
+    margin: 0;
+  }
+
+  .add-post-header p {
+    font-size: 0.8rem;
     color: var(--sage);
-    font-weight: 600;
-    margin-bottom: 12px;
+    margin-top: 4px;
   }
 
   .add-post-section textarea {
     width: 100%;
-    padding: 16px 18px;
+    padding: 18px 20px;
     border: 2px solid var(--mist);
-    border-radius: 16px;
+    border-radius: 20px;
     font-family: 'DM Sans', sans-serif;
     font-size: 1rem;
-    line-height: 1.5;
+    line-height: 1.6;
     background: var(--cream);
     transition: all 0.2s;
     resize: vertical;
@@ -91,23 +114,33 @@
     outline: none;
     border-color: var(--sage);
     background: white;
-    box-shadow: 0 0 0 3px rgba(122,148,104,0.1);
+    box-shadow: 0 0 0 4px rgba(122, 148, 104, 0.1);
   }
 
-  /* ===== PRZYCISK OPUBLIKUJ – Z OBRAMOWANIEM I KOLOROWYM NAPISEM ===== */
+  .add-post-section textarea::placeholder {
+    color: var(--bark);
+    opacity: 0.5;
+    font-style: italic;
+  }
+
+  /* ===== PRZYCISK OPUBLIKUJ – STYL GUMROAD ===== */
   .publish-btn {
-    margin-top: 20px;
-    background: transparent;
-    color: var(--moss);
-    border: 2px solid var(--moss);
-    padding: 12px 28px;
-    border-radius: 40px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
+    --bg: #4A5C3A;
+    --hover-bg: #4A5C3A;
+    --hover-text: white ;
+    
+    margin-top: 24px;
+    color: #4A5C3A;
     cursor: pointer;
-    transition: all 0.25s ease;
+    border: 1px solid #4A5C3A;
+    border-radius: 24px;
+    padding: 0.5em 1.2em;
+    background: transparent;
+    transition: 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -115,57 +148,75 @@
   }
 
   .publish-btn:hover:not(:disabled) {
-    background: var(--moss);
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(74,92,58,0.2);
+    color: var(--hover-text);
+    transform: translate(-0.25rem, -0.25rem);
+    background: var(--hover-bg);
+    box-shadow: 0.25rem 0.25rem 8px var(--bg);
   }
 
   .publish-btn:active:not(:disabled) {
-    transform: translateY(0);
+    transform: translate(0);
+    box-shadow: none;
   }
 
   .publish-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    transform: none;
   }
 
   /* ========== NAGŁÓWEK LISTY POSTÓW ========== */
   .posts-header {
-    margin-bottom: 28px;
-    padding-bottom: 12px;
-    border-bottom: 2px solid var(--mist);
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #8B6F4E;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
   }
 
   .posts-header h2 {
     font-family: 'Playfair Display', serif;
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: 500;
     color: var(--soil);
   }
 
   .posts-header span {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: var(--sage);
     margin-left: 10px;
     font-weight: 400;
+    background: var(--linen);
+    padding: 4px 12px;
+    border-radius: 40px;
   }
 
-  /* ========== KARTA POSTA – WSZYSTKIE JEDNAKOWE ========== */
+  .posts-stats {
+    font-size: 0.8rem;
+    color: var(--bark);
+    background: var(--linen);
+    padding: 6px 16px;
+    border-radius: 40px;
+  }
+
+  /* ========== KARTA POSTA – BARDZIEJ WIDOCZNA ========== */
   .post-card {
     background: white;
-    border: 2px solid var(--mist);
-    border-radius: 20px;
-    padding: 28px;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-    transition: all 0.25s ease;
+    border: 1px solid var(--mist);
+    border-radius: 24px;
+    padding: 32px;
+    margin-bottom: 28px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
   }
 
   .post-card:hover {
     border-color: var(--sage);
-    box-shadow: 0 8px 20px rgba(74,92,58,0.12);
-    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(74, 92, 58, 0.12);
+    transform: translateY(-3px);
   }
 
   /* NAGŁÓWEK POSTA */
@@ -173,7 +224,7 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     flex-wrap: wrap;
     gap: 16px;
   }
@@ -181,160 +232,241 @@
   .post-author {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
   }
 
   .avatar {
-    width: 44px;
-    height: 44px;
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--fern), var(--moss));
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     color: white;
     font-weight: 500;
+    box-shadow: 0 4px 12px rgba(74, 92, 58, 0.2);
   }
 
   .author-info .name {
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: var(--soil);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+  }
+
+  .author-info .name a {
+    color: var(--soil);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .author-info .name a:hover {
+    color: var(--moss);
   }
 
   .author-info .date {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: var(--bark);
-    opacity: 0.65;
+    opacity: 0.7;
   }
 
-  /* ===== PRZYCISKI EDYTUJ / USUŃ ===== */
+  /* ===== PRZYCISKI EDYTUJ / USUŃ – STYL GUMROAD ===== */
   .post-actions {
     display: flex;
     gap: 12px;
   }
 
-  .edit-btn, .delete-btn {
-    background: transparent;
-    border: 2px solid;
-    font-size: 0.8rem;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 6px 16px;
-    border-radius: 40px;
-    transition: all 0.2s ease;
-    font-family: 'DM Sans', sans-serif;
-  }
-
   .edit-btn {
-    color: var(--moss);
-    border-color: var(--moss);
+    --bg: #4A5C3A;
+    --hover-bg: #4A5C3A;
+    --hover-text: white ;
+    
+    color: #4A5C3A;
+    cursor: pointer;
+    border: 1px solid #4A5C3A;
+    border-radius: 24px;
+    padding: 0.5em 1.2em;
     background: transparent;
+    transition: 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
   }
 
   .edit-btn:hover {
-    background: var(--moss);
-    color: white;
+    color: var(--hover-text);
+    transform: translate(-0.2rem, -0.2rem);
+    background: var(--hover-bg);
+    box-shadow: 0.2rem 0.2rem 6px var(--bg);
+  }
+
+  .edit-btn:active {
+    transform: translate(0);
+    box-shadow: none;
   }
 
   .delete-btn {
+    --bg: #c44;
+    --hover-bg: white;
+    --hover-text: #c44;
+    
     color: #c44;
-    border-color: #c44;
+    cursor: pointer;
+    border: 1px solid var(--bg);
+    border-radius: 24px;
+    padding: 0.5em 1.2em;
     background: transparent;
+    transition: 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
   }
 
   .delete-btn:hover {
-    background: #c44;
-    color: white;
+    color: var(--hover-text);
+    transform: translate(-0.2rem, -0.2rem);
+    background: var(--hover-bg);
+    box-shadow: 0.2rem 0.2rem 6px var(--bg);
+  }
+
+  .delete-btn:active {
+    transform: translate(0);
+    box-shadow: none;
   }
 
   /* TREŚĆ POSTA */
   .post-content {
-    font-size: 1rem;
-    line-height: 1.65;
-    color: var(--bark);
-    margin: 20px 0 18px;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: var(--soil);
+    margin: 24px 0 20px;
     white-space: pre-wrap;
     font-weight: 400;
+    background: var(--cream);
+    padding: 20px 24px;
+    border-radius: 20px;
+    border-left: 4px solid var(--sage);
   }
 
   /* TRYB EDYCJI */
   .edit-textarea {
     width: 100%;
-    padding: 14px;
-    border: 2px solid var(--sage);
-    border-radius: 16px;
+    padding: 16px 18px;
+    border: 2px solid var(--moss);
+    border-radius: 18px;
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
+    font-size: 1rem;
     margin: 16px 0;
     resize: vertical;
     background: var(--cream);
   }
 
-  /* ===== PRZYCISKI ZAPISZ / ANULUJ – Z OBRAMOWANIEM ===== */
-  .save-btn, .cancel-btn {
-    padding: 8px 24px;
-    border-radius: 40px;
-    border: 2px solid;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    margin-right: 12px;
-    transition: all 0.2s;
-    background: transparent;
+  .edit-textarea:focus {
+    outline: none;
+    border-color: var(--sage);
+    box-shadow: 0 0 0 3px rgba(74, 92, 58, 0.1);
   }
 
+  /* ===== PRZYCISKI ZAPISZ / ANULUJ – STYL GUMROAD ===== */
   .save-btn {
-    color: var(--moss);
-    border-color: var(--moss);
+    --bg: #4A5C3A;
+    --hover-bg: #4A5C3A;
+    --hover-text: white ;
+    
+    color: #4A5C3A;
+    cursor: pointer;
+    border: 1px solid #4A5C3A;
+    border-radius: 24px;
+    padding: 0.5em 1.2em;
+    background: transparent;
+    transition: 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
   }
 
   .save-btn:hover {
-    background: var(--moss);
-    color: white;
+    color: var(--hover-text);
+    transform: translate(-0.2rem, -0.2rem);
+    background: var(--hover-bg);
+    box-shadow: 0.2rem 0.2rem 6px var(--bg);
+  }
+
+  .save-btn:active {
+    transform: translate(0);
+    box-shadow: none;
   }
 
   .cancel-btn {
-    color: var(--bark);
-    border-color: var(--mist);
+    --bg: #4A5C3A;
+    --hover-bg: transparent;
+    --hover-text: #4A5C3A;
+    
+    color: #4A5C3A;
+    cursor: pointer;
+    border: 1px solid #4A5C3A;
+    border-radius: 24px;
+    padding: 0.5em 1.2em;
+    background: transparent;
+    transition: 0.2s;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
   }
 
   .cancel-btn:hover {
-    background: var(--linen);
-    color: var(--soil);
+    color: var(--hover-text);
+    transform: translate(-0.2rem, -0.2rem);
+    background: var(--hover-bg);
+    box-shadow: 0.2rem 0.2rem 6px var(--bg);
+  }
+
+  .cancel-btn:active {
+    transform: translate(0);
+    box-shadow: none;
   }
 
   /* STOPKA POSTA */
   .post-footer {
-    margin-top: 20px;
-    padding-top: 16px;
-    border-top: 1px solid var(--linen);
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 2px solid var(--linen);
     display: flex;
-    gap: 28px;
+    gap: 32px;
   }
 
   .post-footer button {
+    --bg: transparent;
+    --hover-bg: var(--linen);
+    --hover-text: var(--moss);
+    
     background: transparent;
-    border: none;
+    border: 1px solid transparent;
     font-size: 0.85rem;
     font-weight: 500;
     color: var(--bark);
     cursor: pointer;
     font-family: 'DM Sans', sans-serif;
-    transition: color 0.2s;
-    padding: 6px 12px;
+    padding: 0.5em 1.2em;
     border-radius: 30px;
+    transition: 0.2s;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
   }
 
   .post-footer button:hover {
-    background: var(--linen);
-    color: var(--moss);
+    color: var(--hover-text);
+    transform: translate(-0.15rem, -0.15rem);
+    background: var(--hover-bg);
+    box-shadow: 0.15rem 0.15rem 5px rgba(0, 0, 0, 0.08);
+  }
+
+  .post-footer button:active {
+    transform: translate(0);
+    box-shadow: none;
   }
 
   .like-btn.liked {
@@ -344,12 +476,13 @@
   /* ŁADOWANIE / PUSTY STAN */
   .loading, .empty-state {
     text-align: center;
-    padding: 60px 24px;
+    padding: 80px 32px;
     color: var(--bark);
     background: white;
-    border-radius: 24px;
-    border: 2px solid var(--mist);
+    border-radius: 28px;
+    border: 1px solid var(--mist);
     font-weight: 400;
+    font-size: 1rem;
   }
 
   .empty-state {
@@ -359,25 +492,27 @@
 
   /* STOPKA STRONY */
   .page-footer {
-    margin-top: 60px;
-    padding-top: 28px;
+    margin-top: 80px;
+    padding-top: 32px;
     border-top: 1px solid var(--mist);
     text-align: center;
   }
 
   .footer-copy {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
     color: var(--bark);
-    opacity: 0.5;
+    opacity: 0.6;
   }
 
   @media (max-width: 600px) {
-    .page { padding: 32px 20px; }
-    .add-post-section { padding: 20px; }
+    .page { padding: 32px 16px; }
+    .add-post-section { padding: 24px; }
     .post-card { padding: 20px; }
     .post-header { flex-direction: column; }
     .post-actions { align-self: flex-end; }
-    .posts-header h2 { font-size: 1.3rem; }
+    .posts-header h2 { font-size: 1.5rem; }
+    .post-content { font-size: 0.95rem; padding: 16px; }
+    .post-footer { flex-wrap: wrap; gap: 16px; }
   }
 </style>
 </head>
@@ -385,13 +520,19 @@
 
 <div class="page">
 
-  <!-- FORMULARZ DODAWANIA POSTA -->
+  <!-- FORMULARZ DODAWANIA POSTA – NOWY WYGLĄD -->
   <div class="add-post-section">
-    <div class="add-post-label">Dodaj nowy wpis</div>
+    <div class="add-post-header">
+
+      <div>
+        <h3>Dodaj nowy wpis</h3>
+        <p>Podziel się swoją historią, przepisem lub poradą</p>
+      </div>
+    </div>
     <textarea
       [(ngModel)]="newPostContent"
-      placeholder="Podziel się swoją historią, przepisem lub poradą zero waste..."
-      rows="3"
+      placeholder="🌿 Napisz coś inspirującego... Twoja historia może zmotywować innych!"
+      rows="4"
     ></textarea>
     <button
       class="publish-btn"
@@ -405,10 +546,13 @@
   <!-- LISTA POSTÓW -->
   <div class="posts-header" *ngIf="!loading">
     <h2>Wszystkie wpisy <span *ngIf="posts.length">({{ posts.length }})</span></h2>
+    <div class="posts-stats" *ngIf="posts.length">
+      🌱 Razem {{ posts.length }} inspirujących historii
+    </div>
   </div>
 
   <div *ngIf="!loading">
-    <!-- WSZYSTKIE POSTY – TERAZ JEDNAKOWE -->
+    <!-- WSZYSTKIE POSTY -->
     <div class="post-card" *ngFor="let post of posts">
       <div class="post-header">
         <div class="post-author">
@@ -437,7 +581,7 @@
         <textarea
           class="edit-textarea"
           [(ngModel)]="editContent"
-          rows="4"
+          rows="5"
         ></textarea>
         <div>
           <button class="save-btn" (click)="saveEdit(post.id!)">Zapisz</button>
@@ -454,12 +598,12 @@
     </div>
 
     <div class="empty-state" *ngIf="posts.length === 0">
-      Brak postów. Napisz coś jako pierwszy/a!
+      🌿 Brak postów. Napisz coś jako pierwszy/a!
     </div>
   </div>
 
   <div class="loading" *ngIf="loading">
-    Ładowanie wpisów...
+    🌱 Ładowanie wpisów...
   </div>
 
   <div class="page-footer">

@@ -41,7 +41,7 @@ import { ChatUiService } from '../../services/chat-ui.service';
 
           <div class="actions">
             <button *ngIf="!isOwner" (click)="onOpenChat()" class="btn-chat">
-              <span class="icon">✉️</span> Napisz wiadomość
+              <span class="icon"></span> Napisz wiadomość
             </button>
 
             <button routerLink="/" class="btn-secondary">

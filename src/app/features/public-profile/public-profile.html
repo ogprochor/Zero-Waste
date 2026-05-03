@@ -14,8 +14,11 @@
             <h1>{{user.name}}</h1>
             <div class="username">{{user.username}}</div>
           </div>
-          <!-- BRAK PRZYCISKÓW EDYCJI -->
+          <button class="button" (click)="openChat()">
+          Napisz wiadomość
+          </button>
         </div>
+
 
         <p class="bio">{{user.bio || 'Brak opisu.'}}</p>
         <div class="meta">

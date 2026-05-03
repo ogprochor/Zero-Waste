@@ -617,7 +617,33 @@
       }
     }
   }
+  .button {
+  --bg: #09510c; 
+  --hover-bg: #ffffff;
+  --hover-text: #2e7d32;
 
+  color: white;
+  cursor: pointer;
+  border: 1px solid var(--bg);
+  border-radius: 24px;
+  padding: 0.6em 1.6em;
+  background: var(--bg);
+  transition: 0.2s;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.button:hover {
+  color: var(--hover-text);
+  transform: translate(-2px, -2px);
+  background: var(--hover-bg);
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+}
+
+.button:active {
+  transform: translate(0);
+  box-shadow: none;
+}
   // Pusty stan
   .empty-state {
     text-align: center;

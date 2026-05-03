@@ -26,7 +26,7 @@
               ✎ {{editMode ? 'Anuluj' : 'Edytuj profil'}}
             </button>
             <button class="change-password-btn" (click)="goToChangePassword()">
-              🔒 Zmień hasło
+              Zmień hasło
             </button>
           </div>
         </div>
@@ -87,7 +87,7 @@
     <div *ngIf="activeTab === 'posty'" class="tab-content">
       <div class="add-post-section">
         <button class="add-post-btn" (click)="addPost()" *ngIf="!addingPost">
-          ➕ Dodaj post
+        Dodaj post
         </button>
         
         <div *ngIf="addingPost" class="add-post-form">

@@ -29,6 +29,7 @@ mat-sidenav-content {
   width: 100%;
   max-width: 100%;
   overflow-x: hidden;
+  border-bottom: 1px solid #D4DDD0;
 }
 
 .nav {
@@ -39,7 +40,7 @@ mat-sidenav-content {
   height: auto;
   padding: 12px 24px;
   background: #ffffff;
-  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.06);
+  box-shadow: none;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -55,7 +56,7 @@ mat-sidenav-content {
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  color: var(--zw-text-main);
+  color: #2C1A0E;
   flex: 0 0 auto;
 }
 
@@ -63,18 +64,19 @@ mat-sidenav-content {
   width: 32px;
   height: 32px;
   border-radius: 9px;
-  background: #e7f5ee;
+  background: linear-gradient(135deg, #A8BF9A, #4A5C3A);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  color: var(--zw-primary);
+  color: white;
 }
 
 .nav__brand-text {
   font-weight: 600;
   font-size: 1rem;
   white-space: nowrap;
+  font-family: 'DM Sans', sans-serif;
 }
 
 /* menu */
@@ -89,15 +91,17 @@ mat-sidenav-content {
 
   a {
     font-size: 0.95rem;
-    color: var(--zw-text-muted);
+    color: #7A9468;
     text-decoration: none;
     position: relative;
     padding-block: 4px;
     white-space: nowrap;
+    font-family: 'DM Sans', sans-serif;
+    transition: color 0.2s;
 
     &.is-active,
     &:hover {
-      color: var(--zw-text-main);
+      color: #4A5C3A;
     }
 
     &.is-active::after {
@@ -108,7 +112,7 @@ mat-sidenav-content {
       bottom: -6px;
       height: 2px;
       border-radius: 999px;
-      background: var(--zw-primary);
+      background: #4A5C3A;
     }
   }
 }
@@ -128,16 +132,21 @@ mat-sidenav-content {
   max-width: 260px;
 
   input {
-    padding: 8px 12px;
-    border-radius: 999px;
-    border: 1px solid #ddd;
+    padding: 8px 16px;
+    border-radius: 40px;
+    border: 1px solid #D4DDD0;
     width: 100%;
     font-size: 0.9rem;
     outline: none;
     box-sizing: border-box;
+    background: #FAF7F2;
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
 
     &:focus {
-      border-color: var(--zw-primary);
+      border-color: #4A5C3A;
+      background: white;
+      box-shadow: 0 0 0 3px rgba(74, 92, 58, 0.1);
     }
   }
 }
@@ -148,8 +157,9 @@ mat-sidenav-content {
   left: 0;
   width: 100%;
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 8px 28px rgba(44, 26, 14, 0.08);
+  border: 1px solid #D4DDD0;
   overflow: hidden;
   z-index: 999;
 }
@@ -166,7 +176,7 @@ mat-sidenav-content {
   text-align: left;
 
   &:hover {
-    background: #f5f5f5;
+    background: #FAF7F2;
   }
 }
 
@@ -174,13 +184,14 @@ mat-sidenav-content {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #eaeaea;
+  background: linear-gradient(135deg, #A8BF9A, #4A5C3A);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.8rem;
   overflow: hidden;
   flex-shrink: 0;
+  color: white;
 
   img {
     width: 100%;
@@ -195,12 +206,13 @@ mat-sidenav-content {
 
 .search-name {
   font-weight: 600;
-  color: var(--zw-text-main);
+  color: #2C1A0E;
+  font-family: 'DM Sans', sans-serif;
 }
 
 .search-bio {
-  color: var(--zw-text-muted);
-  font-size: 0.8rem;
+  color: #7A9468;
+  font-size: 0.75rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -208,8 +220,8 @@ mat-sidenav-content {
 
 .search-empty {
   padding: 10px 12px;
-  color: var(--zw-text-muted);
-  font-size: 0.9rem;
+  color: #7A9468;
+  font-size: 0.85rem;
 }
 
 /* actions */
@@ -222,7 +234,8 @@ mat-sidenav-content {
   white-space: nowrap;
 
   span {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    color: #2C1A0E;
   }
 
   button {
@@ -231,18 +244,67 @@ mat-sidenav-content {
   }
 }
 
+/* Przyciski w stylu Gumroad */
 .btn-primary {
-  border-radius: var(--zw-radius-pill);
-  padding-inline: 18px;
-  background: var(--zw-primary) !important;
-  color: #ffffff !important;
-  box-shadow: 0 8px 20px rgba(0, 163, 74, 0.25);
-  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+  --bg: #4A5C3A;
+  --hover-bg: white;
+  --hover-text: #4A5C3A;
+  
+  border-radius: 40px;
+  padding: 0.6em 1.4em;
+  background: var(--bg) !important;
+  color: white !important;
+  border: 1px solid var(--bg) !important;
+  display: inline-block;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+  font-family: 'DM Sans', sans-serif;
+  box-shadow: none !important;
 
   &:hover {
-    background: var(--zw-primary-dark) !important;
-    box-shadow: 0 10px 24px rgba(0, 131, 59, 0.3);
-    transform: translateY(-1px);
+    color: var(--hover-text) !important;
+    transform: translate(-0.2rem, -0.2rem);
+    background: var(--hover-bg) !important;
+    box-shadow: 0.2rem 0.2rem 6px var(--bg) !important;
+  }
+
+  &:active {
+    transform: translate(0);
+    box-shadow: none !important;
+  }
+}
+
+.btn-secondary {
+  --bg: #D4DDD0;
+  --hover-bg: #4A5C3A;
+  --hover-text: white;
+  
+  border-radius: 40px;
+  padding: 0.6em 1.4em;
+  background: transparent;
+  color: #4A5C3A;
+  border: 1px solid #D4DDD0;
+  display: inline-block;
+  font-weight: 500;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.2s;
+  font-family: 'DM Sans', sans-serif;
+
+  &:hover {
+    color: var(--hover-text);
+    transform: translate(-0.2rem, -0.2rem);
+    background: var(--hover-bg);
+    box-shadow: 0.2rem 0.2rem 6px var(--bg);
+  }
+
+  &:active {
+    transform: translate(0);
+    box-shadow: none;
   }
 }
 
@@ -334,6 +396,7 @@ mat-sidenav-content {
 .nav-sidenav {
   width: 260px;
   padding: 24px 16px;
+  background: white;
 }
 
 .nav-sidenav__content {
@@ -343,8 +406,15 @@ mat-sidenav-content {
 
   a {
     text-decoration: none;
-    color: var(--zw-text-main);
+    color: #2C1A0E;
     font-size: 0.95rem;
+    font-family: 'DM Sans', sans-serif;
+    padding: 8px 12px;
+    border-radius: 12px;
+
+    &:hover {
+      background: #FAF7F2;
+    }
   }
 
   button {

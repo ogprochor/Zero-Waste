@@ -1,49 +1,48 @@
 .list-item {
   background: #ffffff;
-  border-radius: 12px; // w makiecie narożniki są dość miękkie, ale nie bardzo okrągłe
+  border-radius: 24px;
   overflow: hidden;
-  border: 1px solid var(--zw-border-soft);
+  border: 1px solid #D4DDD0;
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  transition:
-    box-shadow 0.15s ease,
-    transform 0.15s ease,
-    border-color 0.15s ease;
+  transition: all 0.2s ease;
 
   &:hover {
-    box-shadow: 0 15px 30px rgba(15, 23, 42, 0.08);
-    transform: translateY(-2px);
-    border-color: #d1d5db;
+    box-shadow: 0 8px 28px rgba(74, 92, 58, 0.12);
+    transform: translateY(-3px);
+    border-color: #7A9468;
   }
 }
 
-/* obrazek na górze karty, jak w makiecie */
+/* obrazek na górze karty */
 .list-item__image {
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
   display: block;
+  background: #F0EBE0;
 }
 
 /* treść pod obrazkiem */
 .list-item__content {
-  padding: 12px 14px 10px;
+  padding: 14px 16px 16px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .list-item__name {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 600;
-  color: var(--zw-text-main);
+  color: #2C1A0E;
+  font-family: 'DM Sans', sans-serif;
 }
 
 .list-item__description {
   margin: 0;
   font-size: 0.85rem;
-  color: var(--zw-text-muted);
+  color: #7A9468;
   line-height: 1.4;
 }
