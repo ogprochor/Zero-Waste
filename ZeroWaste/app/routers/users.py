@@ -280,3 +280,89 @@ def update_phone(user_id: int, data: UpdatePhoneRequest, db: Session = Depends(g
     db.refresh(user)
 
     return {"phone": user.phone}
+
+@router.post("/{user_id}/follow")
+def follow_user(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: UserModel = Depends(get_current_user)
+):
+    user_to_follow = db.get(UserModel, user_id)
+
+    if not user_to_follow:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if user_to_follow.id == current_user.id:
+        raise HTTPException(status_code=400, detail="Cannot follow yourself")
+
+    if user_to_follow in current_user.following:
+        return {"detail": "Already following"}
+
+    current_user.following.append(user_to_follow)
+    db.commit()
+
+    return {"detail": "Followed"}
+
+@router.delete("/{user_id}/follow")
+def unfollow_user(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: UserModel = Depends(get_current_user)
+):
+    user_to_unfollow = db.get(UserModel, user_id)
+
+    if not user_to_unfollow:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if user_to_unfollow in current_user.following:
+        current_user.following.remove(user_to_unfollow)
+        db.commit()
+
+    return {"detail": "Unfollowed"}
+
+@router.get("/{user_id}/followers")
+def get_followers(user_id: int, db: Session = Depends(get_db)):
+    user = db.get(UserModel, user_id)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return [
+        {
+            "id": u.id,
+            "username": u.username,
+            "bio": u.bio,
+            "avatar_url": u.avatar_url
+        }
+        for u in user.followers
+    ]
+
+@router.get("/{user_id}/following")
+def get_following(user_id: int, db: Session = Depends(get_db)):
+    user = db.get(UserModel, user_id)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return [
+        {
+            "id": u.id,
+            "username": u.username,
+            "bio": u.bio,
+            "avatar_url": u.avatar_url
+        }
+        for u in user.following
+    ]
+
+@router.get("/{user_id}/is-following")
+def is_following(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: UserModel = Depends(get_current_user)
+):
+    user = db.get(UserModel, user_id)
+
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return user in current_user.following

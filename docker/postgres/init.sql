@@ -59,6 +59,15 @@ CREATE TABLE post_likes (
     UNIQUE(user_id, post_id)
 );
 
+-- Tabela obserwacji (followers)
+CREATE TABLE IF NOT EXISTS followers (
+    follower_id INTEGER NOT NULL,
+    following_id INTEGER NOT NULL,
+    PRIMARY KEY (follower_id, following_id),
+    FOREIGN KEY (follower_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (following_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
 INSERT INTO categories (name) VALUES
     ('Jedzenie'),
     ('Elektronika'),
