@@ -113,8 +113,13 @@
 
         .profile-actions {
           display: flex;
-          gap: 12px;
+          flex-direction: column;
+          gap: 10px;
           margin-top: 4px;
+
+          @media (min-width: 601px) {
+            flex-direction: row;
+          }
 
           .edit-profile-btn,
           .change-password-btn {
@@ -145,6 +150,13 @@
             }
           }
         }
+      }
+
+      .bio {
+        color: #4A5C3A;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 16px;
       }
 
       .meta {
@@ -648,7 +660,7 @@
     }
   }
 
-  // Lista osób (obserwujący/obserwuje)
+  // Lista osób (obserwujący/obserwuje) - IDENTYCZNA JAK W PUBLIC-PROFILE.SCSS
   .people-list {
     display: flex;
     flex-direction: column;
@@ -706,23 +718,24 @@
       --hover-bg: #4A5C3A;
       --hover-text: white;
       
-      color: #4A5C3A;
-      cursor: pointer;
-      border: 1.5px solid #4A5C3A;
-      border-radius: 24px;
       padding: 0.5em 1.2em;
+      border: 1px solid #4A5C3A;
+      border-radius: 40px;
       background: transparent;
-      transition: 0.2s;
+      color: #4A5C3A;
       font-size: 0.7rem;
       font-family: inherit;
+      cursor: pointer;
       letter-spacing: 0.04em;
+      transition: 0.2s;
       white-space: nowrap;
+      font-weight: 600;
 
       &:hover {
         color: var(--hover-text);
-        transform: translate(-0.25rem, -0.25rem);
+        transform: translate(-0.2rem, -0.2rem);
         background: var(--hover-bg);
-        box-shadow: 0.25rem 0.25rem 5px #4A5C3A;
+        box-shadow: 0.2rem 0.2rem 6px #4A5C3A;
       }
 
       &:active {
@@ -736,10 +749,7 @@
         color: #8B6F4E;
 
         &:hover {
-          --bg: #4A5C3A;
-          --hover-bg: #4A5C3A;
-          --hover-text: white;
-          
+          background: #2C1A0E;
           color: white;
           border-color: #4A5C3A;
         }

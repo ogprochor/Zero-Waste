@@ -102,27 +102,21 @@
 
         .profile-actions {
           display: flex;
-          gap: 12px;
+          flex-direction: column;
+          gap: 10px;
           margin-top: 4px;
 
-          .edit-profile-btn,
-          .change-password-btn {
-            padding: 8px 20px;
-            background: transparent;
-            border: 1.5px solid #D4DDD0;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            cursor: pointer;
-            color: #8B6F4E;
-            font-family: inherit;
-            transition: all 0.2s;
-
-            &:hover {
-              border-color: #4A5C3A;
-              color: #4A5C3A;
-            }
+          @media (min-width: 601px) {
+            flex-direction: row;
           }
         }
+      }
+
+      .bio {
+        color: #4A5C3A;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        margin-bottom: 16px;
       }
 
       .meta {
@@ -267,6 +261,58 @@
     margin-top: 32px;
   }
 
+  // Przyciski w profilu
+  .button {
+    --bg: #4A5C3A;
+    --hover-bg: white;
+    --hover-text: #4A5C3A;
+    
+    color: white;
+    cursor: pointer;
+    border: 1px solid var(--bg);
+    border-radius: 40px;
+    padding: 0.6em 1.4em;
+    background: var(--bg);
+    transition: 0.2s;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  .button:hover {
+    color: var(--hover-text);
+    transform: translate(-0.2rem, -0.2rem);
+    background: var(--hover-bg);
+    box-shadow: 0.2rem 0.2rem 6px var(--bg);
+  }
+
+  .button:active {
+    transform: translate(0);
+    box-shadow: none;
+  }
+
+  // Styl dla przycisku obserwuj gdy jest aktywny (obserwuje)
+  .follow-btn {
+    --bg: #D4DDD0;
+    --hover-bg: #4A5C3A;
+    --hover-text: white;
+    
+    background: transparent;
+    color: #4A5C3A;
+    border-color: #4A5C3A;
+  }
+
+  .follow-btn.following {
+    --bg: #F0EBE0;
+    --hover-bg: #4A5C3A;
+    --hover-text: white;
+    
+    background: #F0EBE0;
+    color: #8B6F4E;
+    border-color: #D4DDD0;
+  }
+
   // Dodawanie posta
   .add-post-section {
     margin-bottom: 24px;
@@ -276,17 +322,31 @@
     border: 1px solid #D4DDD0;
 
     .add-post-btn {
-      padding: 12px 24px;
-      background: #4A5C3A;
+      --bg: #4A5C3A;
+      --hover-bg: white;
+      --hover-text: #4A5C3A;
+      
       color: white;
-      border: none;
-      border-radius: 30px;
       cursor: pointer;
+      border: 1px solid var(--bg);
+      border-radius: 40px;
+      padding: 0.6em 1.4em;
+      background: var(--bg);
+      transition: 0.2s;
+      font-weight: 500;
       font-family: inherit;
       font-size: 0.85rem;
 
       &:hover {
-        background: #5E7A4A;
+        color: var(--hover-text);
+        transform: translate(-0.2rem, -0.2rem);
+        background: var(--hover-bg);
+        box-shadow: 0.2rem 0.2rem 6px var(--bg);
+      }
+
+      &:active {
+        transform: translate(0);
+        box-shadow: none;
       }
     }
 
@@ -315,26 +375,64 @@
         justify-content: flex-end;
 
         .submit-post-btn {
-          padding: 8px 20px;
-          background: #4A5C3A;
+          --bg: #4A5C3A;
+          --hover-bg: white;
+          --hover-text: #4A5C3A;
+          
           color: white;
-          border: none;
-          border-radius: 30px;
           cursor: pointer;
+          border: 1px solid var(--bg);
+          border-radius: 40px;
+          padding: 0.5em 1.2em;
+          background: var(--bg);
+          transition: 0.2s;
+          font-family: inherit;
+
+          &:hover {
+            color: var(--hover-text);
+            transform: translate(-0.2rem, -0.2rem);
+            background: var(--hover-bg);
+            box-shadow: 0.2rem 0.2rem 6px var(--bg);
+          }
+
+          &:active {
+            transform: translate(0);
+            box-shadow: none;
+          }
 
           &:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
           }
         }
 
         .cancel-post-btn {
-          padding: 8px 20px;
-          background: transparent;
-          border: 1px solid #D4DDD0;
-          border-radius: 30px;
-          cursor: pointer;
+          --bg: #D4DDD0;
+          --hover-bg: #FAF7F2;
+          --hover-text: #4A5C3A;
+          
           color: #8B6F4E;
+          cursor: pointer;
+          border: 1px solid var(--bg);
+          border-radius: 40px;
+          padding: 0.5em 1.2em;
+          background: transparent;
+          transition: 0.2s;
+          font-family: inherit;
+
+          &:hover {
+            color: var(--hover-text);
+            transform: translate(-0.2rem, -0.2rem);
+            background: var(--hover-bg);
+            box-shadow: 0.2rem 0.2rem 6px var(--bg);
+          }
+
+          &:active {
+            transform: translate(0);
+            box-shadow: none;
+          }
         }
       }
     }
@@ -587,21 +685,33 @@
     }
 
     .follow-btn {
-      padding: 6px 18px;
-      border: 1.5px solid #4A5C3A;
-      border-radius: 30px;
+      --bg: #D4DDD0;
+      --hover-bg: #4A5C3A;
+      --hover-text: white;
+      
+      padding: 0.5em 1.2em;
+      border: 1px solid #4A5C3A;
+      border-radius: 40px;
       background: transparent;
       color: #4A5C3A;
       font-size: 0.7rem;
       font-family: inherit;
       cursor: pointer;
       letter-spacing: 0.04em;
-      transition: all 0.2s;
+      transition: 0.2s;
       white-space: nowrap;
+      font-weight: 600;
 
       &:hover {
-        background: #4A5C3A;
-        color: white;
+        color: var(--hover-text);
+        transform: translate(-0.2rem, -0.2rem);
+        background: var(--hover-bg);
+        box-shadow: 0.2rem 0.2rem 6px #4A5C3A;
+      }
+
+      &:active {
+        transform: translate(0);
+        box-shadow: none;
       }
 
       &.following {
@@ -617,33 +727,7 @@
       }
     }
   }
-  .button {
-  --bg: #09510c; 
-  --hover-bg: #ffffff;
-  --hover-text: #2e7d32;
 
-  color: white;
-  cursor: pointer;
-  border: 1px solid var(--bg);
-  border-radius: 24px;
-  padding: 0.6em 1.6em;
-  background: var(--bg);
-  transition: 0.2s;
-  font-weight: 500;
-  margin-top: 10px;
-}
-
-.button:hover {
-  color: var(--hover-text);
-  transform: translate(-2px, -2px);
-  background: var(--hover-bg);
-  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
-}
-
-.button:active {
-  transform: translate(0);
-  box-shadow: none;
-}
   // Pusty stan
   .empty-state {
     text-align: center;
@@ -658,16 +742,31 @@
     }
 
     .btn-primary {
+      --bg: #4A5C3A;
+      --hover-bg: white;
+      --hover-text: #4A5C3A;
+      
       display: inline-block;
-      padding: 10px 24px;
-      background: #4A5C3A;
       color: white;
-      text-decoration: none;
-      border-radius: 30px;
+      cursor: pointer;
+      border: 1px solid var(--bg);
+      border-radius: 40px;
+      padding: 0.6em 1.4em;
+      background: var(--bg);
+      transition: 0.2s;
       font-size: 0.85rem;
+      text-decoration: none;
 
       &:hover {
-        background: #5E7A4A;
+        color: var(--hover-text);
+        transform: translate(-0.2rem, -0.2rem);
+        background: var(--hover-bg);
+        box-shadow: 0.2rem 0.2rem 6px var(--bg);
+      }
+
+      &:active {
+        transform: translate(0);
+        box-shadow: none;
       }
     }
   }

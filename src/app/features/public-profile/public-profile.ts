@@ -6,6 +6,7 @@ import { OfferService } from '../../services/offer.service';
 import { CategoryService } from '../../services/category.service';
 import { PostService } from '../../services/post.service';
 import { ChatUiService } from '../../services/chat-ui.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-public-profile',
@@ -17,10 +18,15 @@ import { ChatUiService } from '../../services/chat-ui.service';
 export class PublicProfileComponent implements OnInit {
   user: any;
   loading = true;
+
   activeTab: 'posty' | 'moje-ogloszenia' | 'obserwujacy' | 'obserwowani' = 'posty';
 
   offersLoading = false;
   private categoryMap = new Map<number, string>();
+
+  isFollowing = false; 
+
+  private API_URL = 'http://127.0.0.1:8000';
 
   constructor(
     private route: ActivatedRoute,
@@ -29,7 +35,8 @@ export class PublicProfileComponent implements OnInit {
     private categoryService: CategoryService,
     private postService: PostService,
     private router: Router,
-    private chatService: ChatUiService
+    private chatService: ChatUiService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -38,7 +45,12 @@ export class PublicProfileComponent implements OnInit {
     this.loadUser(id);
     this.loadOffers(id);
     this.loadPosts(id);
+    this.checkIfFollowing(id); 
+    this.loadFollowers(id);
+    this.loadFollowing(id);
   }
+
+  // USER
 
   loadUser(id: number): void {
     this.authService.getUserById(id).subscribe({
@@ -69,6 +81,36 @@ export class PublicProfileComponent implements OnInit {
     });
   }
 
+
+  // FOLLOW SYSTEM
+
+  checkIfFollowing(userId: number): void {
+    this.http.get<boolean>(`${this.API_URL}/users/${userId}/is-following`)
+      .subscribe({
+        next: (res) => this.isFollowing = res,
+        error: () => this.isFollowing = false
+      });
+  }
+
+  toggleFollow(): void {
+    const userId = this.user.id;
+
+    if (this.isFollowing) {
+      this.http.delete(`${this.API_URL}/users/${userId}/follow`)
+        .subscribe(() => {
+          this.isFollowing = false;
+          this.loadFollowers(userId); 
+        });
+    } else {
+      this.http.post(`${this.API_URL}/users/${userId}/follow`, {})
+        .subscribe(() => {
+          this.isFollowing = true;
+          this.loadFollowers(userId); 
+        });
+    }
+  }
+
+  // OFFERS
   loadOffers(userId: number): void {
     this.offersLoading = true;
 
@@ -99,6 +141,27 @@ export class PublicProfileComponent implements OnInit {
     });
   }
 
+  loadFollowers(userId: number): void {
+    this.http.get<any[]>(`${this.API_URL}/users/${userId}/followers`)
+      .subscribe({
+        next: (data) => {
+          this.user.followers = data;
+        },
+        error: (err) => console.error(err)
+      });
+  }
+
+  loadFollowing(userId: number): void {
+    this.http.get<any[]>(`${this.API_URL}/users/${userId}/following`)
+      .subscribe({
+        next: (data) => {
+          this.user.following = data;
+        },
+        error: (err) => console.error(err)
+      });
+  }
+
+  // POSTS
   loadPosts(userId: number): void {
     this.postService.getUserPosts(userId).subscribe({
       next: (posts: any[]) => {
@@ -109,6 +172,7 @@ export class PublicProfileComponent implements OnInit {
     });
   }
 
+  // UI
   openChat(): void {
     if (this.user) {
       this.chatService.openChat(this.user.name, this.user.id);

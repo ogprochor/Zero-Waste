@@ -14,9 +14,14 @@
             <h1>{{user.name}}</h1>
             <div class="username">{{user.username}}</div>
           </div>
-          <button class="button" (click)="openChat()">
-          Napisz wiadomość
-          </button>
+          <div class="profile-actions">
+            <button class="button follow-btn" (click)="toggleFollow()">
+              {{ isFollowing ? 'Przestań obserwować' : 'Obserwuj' }}
+            </button>
+            <button class="button message-btn" (click)="openChat()">
+              Napisz wiadomość
+            </button>
+          </div>
         </div>
 
 
@@ -120,7 +125,7 @@
         <div class="person-row" *ngFor="let follower of user.followers">
           <div class="person-avatar">🌻</div>
           <div class="person-info">
-            <div class="person-name">{{follower.name}}</div>
+            <div class="person-name">{{follower.username}}</div>
             <div class="person-username">{{follower.username}}</div>
             <div class="person-bio">{{follower.bio}}</div>
           </div>
@@ -139,7 +144,7 @@
         <div class="person-row" *ngFor="let follow of user.following">
           <div class="person-avatar">🌻</div>
           <div class="person-info">
-            <div class="person-name">{{follow.name}}</div>
+            <div class="person-name">{{follow.username}}</div>
             <div class="person-username">{{follow.username}}</div>
             <div class="person-bio">{{follow.bio}}</div>
           </div>
