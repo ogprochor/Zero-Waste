@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status, Query
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from typing import List
 from pathlib import Path
 import shutil
@@ -26,7 +27,11 @@ def get_users(db: Session = Depends(get_db)):
 
 
 @router.get("/search")
-def search_users(query: str, db: Session = Depends(get_db)):
+def search_users(
+    query: str = Query(..., min_length=1),
+    limit: int = Query(10, ge=1, le=30),
+    db: Session = Depends(get_db)
+):
     query = query.strip()
 
     if len(query) < 2:
@@ -34,9 +39,15 @@ def search_users(query: str, db: Session = Depends(get_db)):
 
     users = (
         db.query(UserModel)
-        .filter(UserModel.username.ilike(f"%{query}%"))
+        .filter(
+            or_(
+                UserModel.username.ilike(f"%{query}%"),
+                UserModel.email.ilike(f"%{query}%"),
+                UserModel.bio.ilike(f"%{query}%")
+            )
+        )
         .order_by(UserModel.username.asc())
-        .limit(10)
+        .limit(limit)
         .all()
     )
 
@@ -281,6 +292,7 @@ def update_phone(user_id: int, data: UpdatePhoneRequest, db: Session = Depends(g
 
     return {"phone": user.phone}
 
+
 @router.post("/{user_id}/follow")
 def follow_user(
     user_id: int,
@@ -303,6 +315,7 @@ def follow_user(
 
     return {"detail": "Followed"}
 
+
 @router.delete("/{user_id}/follow")
 def unfollow_user(
     user_id: int,
@@ -319,6 +332,7 @@ def unfollow_user(
         db.commit()
 
     return {"detail": "Unfollowed"}
+
 
 @router.get("/{user_id}/followers")
 def get_followers(user_id: int, db: Session = Depends(get_db)):
@@ -337,6 +351,7 @@ def get_followers(user_id: int, db: Session = Depends(get_db)):
         for u in user.followers
     ]
 
+
 @router.get("/{user_id}/following")
 def get_following(user_id: int, db: Session = Depends(get_db)):
     user = db.get(UserModel, user_id)
@@ -353,6 +368,7 @@ def get_following(user_id: int, db: Session = Depends(get_db)):
         }
         for u in user.following
     ]
+
 
 @router.get("/{user_id}/is-following")
 def is_following(
