@@ -88,7 +88,10 @@ export class MainLayout {
   }
 
   openProfile(userId: number): void {
-    this.searchOpen = false; // zamyka dropdown (opcjonalne)
+    this.searchOpen = false;
+    this.searchQuery = '';
+    this.searchResults = [];
+
     this.router.navigate(['/profil', userId]);
   }
 

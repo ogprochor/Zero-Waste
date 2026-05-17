@@ -14,7 +14,7 @@
     </p>
 
     <div class="hero__actions">
-      <a class="btn-secondary hero__btn">
+      <a routerLink="/features" class="btn-secondary hero__btn">
         Poznaj funkcje
       </a>
 
@@ -29,9 +29,11 @@
   <h3>Ostatnio dodane przedmioty</h3>
 
   <div class="preview-grid">
-    <a *ngFor="let it of items" 
-       [routerLink]="['/offers', it.id]" 
-       class="offer-tile-link">
+    <a
+      *ngFor="let it of items"
+      [routerLink]="['/offers', it.id]"
+      class="offer-tile-link"
+    >
       <app-list-item [item]="it"></app-list-item>
     </a>
   </div>

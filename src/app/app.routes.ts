@@ -1,6 +1,9 @@
 import { Routes } from '@angular/router';
 import { MainLayout } from './layout/main-layout';
 import { Home } from './pages/home/home';
+import { FeaturesPageComponent } from './pages/features-page/features-page';
+import { EducationPageComponent } from './pages/education-page/education-page';
+import { OrganizationsPageComponent } from './pages/organizations-page/organizations-page';
 import { ListPageComponent } from './features/list-page/list-page';
 import { LoginComponent } from './features/auth/login/login';
 import { RegisterComponent } from './features/auth/register/register';
@@ -29,6 +32,16 @@ export const routes: Routes = [
     component: MainLayout,
     children: [
       { path: '', component: Home },
+
+      { path: 'features', component: FeaturesPageComponent },
+      { path: 'funkcje', component: FeaturesPageComponent },
+
+      { path: 'education', component: EducationPageComponent },
+      { path: 'edukacja', component: EducationPageComponent },
+
+      { path: 'organizations', component: OrganizationsPageComponent },
+      { path: 'organizacje', component: OrganizationsPageComponent },
+
       { path: 'lista', component: ListPageComponent },
       { path: 'offers/:id', component: OfferDetailsComponent },
       { path: 'offers/:id/edit', component: EditOfferComponent, canActivate: [authGuard] },
@@ -38,7 +51,10 @@ export const routes: Routes = [
       { path: 'profil/:id', component: PublicProfileComponent },
       { path: 'my-offers', component: MyOffersComponent, canActivate: [authGuard] },
       { path: 'wiadomosci', component: MessagesComponent, canActivate: [authGuard] },
-      { path: 'blog', loadComponent: () => import('./features/blog/blog').then(m => m.BlogComponent)}
+      {
+        path: 'blog',
+        loadComponent: () => import('./features/blog/blog').then(m => m.BlogComponent)
+      }
     ],
   },
 

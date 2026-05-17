@@ -31,6 +31,13 @@
 
       <a
         *ngIf="isLoggedIn()"
+        routerLink="/profil"
+        (click)="drawer.close()">
+        Mój profil
+      </a>
+
+      <a
+        *ngIf="isLoggedIn()"
         routerLink="/profil/edytuj"
         (click)="drawer.close()">
         Edytuj profil
@@ -53,6 +60,7 @@
           (click)="drawer.close()">
           Zaloguj się
         </button>
+
         <button
           mat-flat-button
           routerLink="/register"
@@ -77,29 +85,55 @@
         </a>
 
         <nav class="nav__menu">
-          <a routerLink="/features" routerLinkActive="is-active">Funkcje</a>
-          <a routerLink="/education" routerLinkActive="is-active">Edukacja</a>
-          <a routerLink="/organizations" routerLinkActive="is-active">Organizacje</a>
-          <a routerLink="/blog" routerLinkActive="is-active">Blog</a>
+          <a
+            routerLink="/features"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: true }">
+            Funkcje
+          </a>
+
+          <a
+            routerLink="/education"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: true }">
+            Edukacja
+          </a>
+
+          <a
+            routerLink="/organizations"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: true }">
+            Organizacje
+          </a>
+
+          <a
+            routerLink="/blog"
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: true }">
+            Blog
+          </a>
 
           <a
             *ngIf="isLoggedIn()"
             routerLink="/wiadomosci"
-            routerLinkActive="is-active">
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: true }">
             Wiadomości
           </a>
 
           <a
             *ngIf="isLoggedIn()"
             routerLink="/dodaj-oferte"
-            routerLinkActive="is-active">
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: true }">
             Dodaj ofertę
           </a>
 
           <a
             *ngIf="isLoggedIn()"
             routerLink="/profil"
-            routerLinkActive="is-active">
+            routerLinkActive="is-active"
+            [routerLinkActiveOptions]="{ exact: true }">
             Mój profil
           </a>
         </nav>
@@ -116,7 +150,9 @@
           />
 
           <div class="search-dropdown" *ngIf="searchOpen">
-            <div class="search-empty" *ngIf="searching">Szukam...</div>
+            <div class="search-empty" *ngIf="searching">
+              Szukam...
+            </div>
 
             <ng-container *ngIf="!searching">
               <button
@@ -126,13 +162,25 @@
                 (mousedown)="openProfile(user.id)"
               >
                 <div class="search-avatar">
-                  <img *ngIf="user.avatar_url; else noAvatar" [src]="'http://127.0.0.1:8000' + user.avatar_url" [alt]="user.username">
-                  <ng-template #noAvatar>👤</ng-template>
+                  <img
+                    *ngIf="user.avatar_url; else noAvatar"
+                    [src]="'http://127.0.0.1:8000' + user.avatar_url"
+                    [alt]="user.username"
+                  />
+
+                  <ng-template #noAvatar>
+                    👤
+                  </ng-template>
                 </div>
 
                 <div class="search-meta">
-                  <div class="search-name">{{ user.username }}</div>
-                  <div class="search-bio" *ngIf="user.bio">{{ user.bio }}</div>
+                  <div class="search-name">
+                    {{ user.username }}
+                  </div>
+
+                  <div class="search-bio" *ngIf="user.bio">
+                    {{ user.bio }}
+                  </div>
                 </div>
               </button>
 
@@ -145,7 +193,10 @@
 
         <div class="nav__actions">
           <ng-container *ngIf="currentUser$ | async as user; else desktopGuestButtons">
-            <span style="margin-right: 12px;">Witaj, {{ user.username }}</span>
+            <span style="margin-right: 12px;">
+              Witaj, {{ user.username }}
+            </span>
+
             <button
               mat-stroked-button
               type="button"
@@ -161,6 +212,7 @@
               type="button">
               Zaloguj się
             </button>
+
             <button
               mat-flat-button
               routerLink="/register"

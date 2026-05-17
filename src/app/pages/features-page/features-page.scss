@@ -1,0 +1,135 @@
+:host {
+  display: block;
+  color: #2C1A0E;
+}
+
+.static-page {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 28px 16px 64px;
+}
+
+.static-hero {
+  background: linear-gradient(135deg, #4A5C3A, #7A9468);
+  color: #ffffff;
+  border-radius: 28px;
+  padding: clamp(34px, 6vw, 68px);
+  margin-bottom: 28px;
+  box-shadow: 0 14px 36px rgba(44, 26, 14, 0.14);
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.78rem;
+  font-weight: 800;
+  opacity: 0.9;
+}
+
+h1 {
+  max-width: 780px;
+  margin: 0 0 16px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 1.08;
+}
+
+.static-hero p:not(.eyebrow) {
+  max-width: 760px;
+  margin: 0 0 28px;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  opacity: 0.95;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.page-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: 0.2s ease;
+}
+
+.page-btn-primary {
+  background: #ffffff;
+  color: #4A5C3A;
+}
+
+.page-btn-secondary {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.page-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(44, 26, 14, 0.18);
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.info-card {
+  background: #ffffff;
+  border: 1px solid #D4DDD0;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(44, 26, 14, 0.06);
+}
+
+.icon {
+  display: inline-flex;
+  width: 46px;
+  height: 46px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: #FAF7F2;
+  margin-bottom: 14px;
+  font-size: 1.35rem;
+}
+
+h2 {
+  margin: 0 0 10px;
+  color: #2C1A0E;
+  font-size: 1.15rem;
+}
+
+.info-card p {
+  margin: 0;
+  color: #6F8361;
+  line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .static-page {
+    padding-inline: 12px;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .static-hero {
+    border-radius: 22px;
+  }
+}
