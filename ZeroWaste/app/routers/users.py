@@ -308,7 +308,10 @@ def follow_user(
         raise HTTPException(status_code=400, detail="Cannot follow yourself")
 
     if user_to_follow in current_user.following:
-        return {"detail": "Already following"}
+        raise HTTPException(
+            status_code=400,
+            detail="Already following this user"
+        )
 
     current_user.following.append(user_to_follow)
     db.commit()
@@ -327,9 +330,14 @@ def unfollow_user(
     if not user_to_unfollow:
         raise HTTPException(status_code=404, detail="User not found")
 
-    if user_to_unfollow in current_user.following:
-        current_user.following.remove(user_to_unfollow)
-        db.commit()
+    if user_to_unfollow not in current_user.following:
+        raise HTTPException(
+            status_code=400,
+            detail="You are not following this user"
+        )
+
+    current_user.following.remove(user_to_unfollow)
+    db.commit()
 
     return {"detail": "Unfollowed"}
 
